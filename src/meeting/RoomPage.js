@@ -15,7 +15,7 @@ export default class RoomPage extends React.Component {
 
   handleChangeSlotClick() {
     const {meetingID, userID, slotID} = this.props.match.params;
-    const meetingPath = 'users/' + userID + '/meeting/' + meetingID; 
+    const meetingPath = '/meeting/' + meetingID;
     const path = meetingPath + '/slots/' + slotID;
     const data =  {status: "pending"};
     RequestUtil.post(path, data)
@@ -32,7 +32,7 @@ export default class RoomPage extends React.Component {
   componentDidMount() {
     document.title = "جلس";
     const {meetingID, userID, slotID} = this.props.match.params;
-    const path = 'users/' + userID + '/meeting/' + meetingID + '/slots/' + slotID;
+    const path = '/meeting/' + meetingID + '/slots/' + slotID;
     RequestUtil.post(path, null, {
         'axios-retry': {
             retries: 20,
@@ -56,7 +56,7 @@ export default class RoomPage extends React.Component {
   render() {
     let roomList = this.state.roomList;
     const {meetingID, userID, slotID} = this.props.match.params;
-    const path = 'users/' + userID + '/meeting/' + meetingID + '/slots/' + slotID;
+    const path = '/meeting/' + meetingID + '/slots/' + slotID;
     if (this.state.roomList && this.state.roomList.length) {
         return (
             <div className="job-item-title-container">

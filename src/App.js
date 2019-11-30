@@ -11,9 +11,9 @@ class App extends Component {
         <Router>
           <div>
             <Switch>
-              <Route path="/users/:userID/meetings/:meetingID" component={SlotPage} />
-              <Route path="/users/:userID/meetings/:meetingID/slots/:slotID" component={RoomPage} />
-              <Route path="/users/:userID/meetings/:meetingID/slots/:slotID/rooms/:roomID" component={ResultPage} />
+              <Route path="/meetings/:meetingID" component={SlotPage} />
+              <Route path="/meetings/:meetingID/slots/:slotID" component={RoomPage} />
+              <Route path="/meetings/:meetingID/slots/:slotID/rooms/:roomID" component={ResultPage} />
             </Switch>
           </div>
         </Router>

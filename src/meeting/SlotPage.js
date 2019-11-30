@@ -31,6 +31,7 @@ export default class SlotPage extends React.Component {
   }
 
   render() {
+    // const meeting = this.state.meeting;
     const meetingID = this.props.match.params.meetingID;
     const path = '/meetings/' + meetingID;
 

@@ -9,7 +9,7 @@ export default class RoomPage extends React.Component {
     super(props);
     this.state = {
       roomList: null
-    }
+    };
     this.handleChangeSlotClick = this.handleChangeSlotClick.bind(this);
   }
 

@@ -48,7 +48,10 @@ export default class RoomPage extends React.Component {
     const path = `/meetings/${meetingID}/available_rooms`;
     RequestUtil.get(path, {
       'axios-retry': {
-          retries: 20
+          retries: 50,
+          retryDelay: () => {
+            return 1000;
+          }
       }
     }).then(res => {
       console.log("GETRoomList", res);

@@ -41,7 +41,7 @@ export default class RoomPage extends React.Component {
 
   handleChangeSlotClick() {
     const {meetingID} = this.props.match.params;
-    const meetingPath = '/meetings/' + meetingID;
+    const meetingPath = '/meetings/' + meetingID + '/status';
     const data =  {status: "pending"};
     RequestUtil.post(meetingPath, data).then(res => {
       console.log(res.data);
@@ -55,7 +55,6 @@ export default class RoomPage extends React.Component {
   
   handleSelectRoom(id, e) {
     e.preventDefault();
-    console.log(id, " selected");
     const meetingID = this.props.match.params.meetingID;
     RequestUtil.post(`/meetings/${meetingID}/rooms/${id}`, null).then(res => {
       console.log(res);

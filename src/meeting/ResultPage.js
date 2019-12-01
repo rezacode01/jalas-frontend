@@ -1,5 +1,6 @@
 import React from 'react';
 import RequestUtil from '../common/Util';
+import { Redirect } from 'react-router-dom';
     
 
 export default class ResultPage extends React.Component {
@@ -12,28 +13,30 @@ export default class ResultPage extends React.Component {
 
   componentDidMount() {
     document.title = "جلس";
-    const {meetingID, roomID} = this.props.match.params;
-    const path = '/meetings/' + meetingID + '/rooms/' + roomID;
-    RequestUtil.post(path, null).then(res => {
-        console.log("post...", res);
-        if (res.status === 200) {
-            this.setState({ ...this.state, 
-                meeting: res.data
-            });
-        }
-    }).catch(error => {
-        console.log(error);
+    const {meetingID} = this.props.match.params;
+    RequestUtil.get(`/meetings/${meetingID}`).then(res => {
+      console.log(res);
+      if (res.status === 200) {
+        console.log(res.data.state)
+        this.setState({ ...this.state,
+          meeting: res.data
+        });
+      }
+    }).catch(err => {
+        console.log(err);
     });
   }
 
   render() {
     let meeting = this.state.meeting;
-    console.log("meeting", meeting)
     let message = "صبرکنید"
     if (!meeting) {
         return <div>صبرکنید</div>
     }
-    if (meeting.state === "ROOM_SUBMITTED") {
+    const meetingPath = `/meetings/${meeting.id}`;
+    if (meeting.state === "PENDING") {
+        return <Redirect to={meetingPath} />
+    } else if (meeting.state === "ROOM_SUBMITTED") {
         message = "درخواست شما ثبت شد. منتظر تایید باشید"
     } else if (meeting.state === "RESERVED") {
         message = "درخواست شما با موفقیت تایید گردید." 

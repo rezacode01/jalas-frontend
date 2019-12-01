@@ -8,14 +8,13 @@ export default class SlotPage extends React.Component {
       meeting: {slots:[]},
       redirect: false,
     }
+    this.handleSelectSlot = this.handleSelectSlot.bind(this)
   }
 
   componentDidMount() {
     document.title = "جلس";
     const meetingID = this.props.match.params.meetingID;
-    // const userID = this.props.match.params.userID;
-    const path = '/meetings/' + meetingID;
-    RequestUtil.get(path).then(res => {
+    RequestUtil.get(`/meetings/${meetingID}`).then(res => {
       console.log(res.data);
       if (res.status === 200) {
         const meetingInfo = res.data;
@@ -28,10 +27,24 @@ export default class SlotPage extends React.Component {
     });
   }
 
-  render() {
-    // const meeting = this.state.meeting;
+  handleSelectSlot(id, e) {
+    e.preventDefault();
+    console.log(id, " selected");
     const meetingID = this.props.match.params.meetingID;
-    const path = '/meetings/' + meetingID;
+    const meetingPath = '/meetings/' + meetingID; 
+    const path = meetingPath + "/slots/" + id;
+    RequestUtil.post(path, null).then(res => {
+      console.log(res);
+      if (res.status === 200) {
+        console.log("post done")
+        this.props.history.push(meetingPath + '/available_rooms')
+      }
+    }).catch(error => {
+        console.log(error);
+    });
+  }
+
+  render() {
 
     return (
       <div className="job-item-title-container">
@@ -41,7 +54,7 @@ export default class SlotPage extends React.Component {
             <tr>
               <th>شروع</th><th>اتمام</th><th>موافق</th><th>مخالف</th><th>انتخاب</th>
             </tr>
-            { this.state.meeting.slots.map(slot => <SlotItem key={slot.id} slot={slot} path={path} /> )}
+            { this.state.meeting.slots.map(slot => <SlotItem key={slot.id} slot={slot} onSelect={this.handleSelectSlot} /> )}
           </tbody>
         </table>
       </div>
@@ -51,13 +64,12 @@ export default class SlotPage extends React.Component {
 
 function SlotItem(props) {
   let slot = props.slot;
-  const roomSelectionPath = props.path + '/slots/' + slot.id;
   return (
       <tr>
         <td>{slot.from}</td>
         <td>{slot.to}</td>
         <td>{slot.agreeCount}</td><td>{slot.disAgreeCount}</td>
-        <td><a href={roomSelectionPath}>انتخاب</a></td>
+        <td><button onClick={(e) => props.onSelect(slot.id, e)}>انتخاب</button></td>
       </tr>
   );
 }

@@ -9,38 +9,12 @@ export default class RoomPage extends React.Component {
       roomList: null
     };
     this.handleChangeSlotClick = this.handleChangeSlotClick.bind(this);
-  }
-
-  handleChangeSlotClick() {
-    const {meetingID, slotID} = this.props.match.params;
-    const meetingPath = '/meetings/' + meetingID;
-    const path = meetingPath + '/slots/' + slotID;
-    const data =  {status: "pending"};
-    RequestUtil.post(path, data)
-    .then(res => {
-      console.log(res.data);
-      if (res.status === 200) {
-        return <Redirect to={meetingPath} />
-      }
-    }).catch(error => {
-        console.log(error.response);
-    });
+    this.handleSelectRoom = this.handleSelectRoom.bind(this);
   }
 
   componentDidMount() {
-    document.title = "جلس";
-    const {meetingID, slotID} = this.props.match.params;
-    const path = '/meetings/' + meetingID + '/slots/' + slotID;
-    RequestUtil.post(path, null)
-    .then(res => {
-      console.log(res.data);
-      if (res.status === 200) {
-        console.log("post done")
-        this.getRoomList();
-      }
-    }).catch(error => {
-        console.log(error);
-    });
+    document.title = "انتخاب اتاق";
+    this.getRoomList()
   }
 
   getRoomList() {
@@ -52,13 +26,12 @@ export default class RoomPage extends React.Component {
           retryDelay: () => {
             return 1000;
           }
-      }
+        }
     }).then(res => {
-      console.log("GETRoomList", res);
+      console.log("Getting RoomList", res);
       if (res.status === 200) {
-        const roomList = res.data.availableRooms;
         this.setState({ ...this.state, 
-          roomList: roomList
+          roomList: res.data.availableRooms
         });
       }
     }).catch(error => {
@@ -66,10 +39,37 @@ export default class RoomPage extends React.Component {
     });
   }
 
+  handleChangeSlotClick() {
+    const {meetingID} = this.props.match.params;
+    const meetingPath = '/meetings/' + meetingID;
+    const data =  {status: "pending"};
+    RequestUtil.post(meetingPath, data).then(res => {
+      console.log(res.data);
+      if (res.status === 200) {
+        return <Redirect to={meetingPath} />
+      }
+    }).catch(error => {
+        console.log(error.response);
+    });
+  }
+  
+  handleSelectRoom(id, e) {
+    e.preventDefault();
+    console.log(id, " selected");
+    const meetingID = this.props.match.params.meetingID;
+    RequestUtil.post(`/meetings/${meetingID}/rooms/${id}`, null).then(res => {
+      console.log(res);
+      if (res.status === 200) {
+        console.log("Posted room id");
+        this.props.history.push(`/meetings/${meetingID}/status`);
+      }
+    }).catch(error => {
+        console.log(error);
+    });
+  }
+
   render() {
     let roomList = this.state.roomList;
-    const {meetingID, slotID} = this.props.match.params;
-    const path = '/meetings/' + meetingID + '/slots/' + slotID;
     if (!this.state.roomList) {
       return <div>
           <h2>...صبرکنید</h2>
@@ -80,7 +80,7 @@ export default class RoomPage extends React.Component {
             <div className="job-item-title-container">
                 <h3 className="job-item-title">اتاق مورد نظر خود را انتخاب کنید:</h3>
                 <ul>
-                  { roomList.map(room => <RoomListItem key={room} room={room} path={path} /> )}
+                  { roomList.map(room => <RoomListItem key={room} room={room} onSelect={this.handleSelectRoom} /> )}
                 </ul>
             </div>
             );
@@ -99,11 +99,9 @@ export default class RoomPage extends React.Component {
 
 function RoomListItem(props) {
     let room = props.room;
-    const roomSelectionPath = props.path + '/rooms/' + room;
     return (
         <li>
-          {room}
-          <a href={roomSelectionPath}>انتخاب</a>
+          <div>{room}-<button onClick={(e) => props.onSelect(room, e)}>انتخاب</button></div>
         </li>
     );
 }

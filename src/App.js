@@ -12,8 +12,8 @@ class App extends Component {
           <div>
             <Switch>
               <Route exact path="/meetings/:meetingID" component={SlotPage} />
-              <Route exact path="/meetings/:meetingID/slots/:slotID" component={RoomPage} />
-              <Route exact path="/meetings/:meetingID/slots/:slotID/rooms/:roomID" component={ResultPage} />
+              <Route exact path="/meetings/:meetingID/available_rooms" component={RoomPage} />
+              <Route exact path="/meetings/:meetingID/status" component={ResultPage} />
             </Switch>
           </div>
         </Router>

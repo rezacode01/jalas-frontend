@@ -1,7 +1,5 @@
 import React from 'react';
-import './ProjectPage.css';
 import RequestUtil from '../common/Util';
-    
 
 export default class SlotPage extends React.Component {
   constructor(props) {
@@ -37,10 +35,15 @@ export default class SlotPage extends React.Component {
 
     return (
       <div className="job-item-title-container">
-        <h3 className="job-item-title">{this.state.meeting.title}</h3>
-        <ul className="job-list">
-          { this.state.meeting.slots.map(slot => <SlotItem key={slot.id} slot={slot} path={path} /> )}
-        </ul>
+        <h3>{this.state.meeting.title}</h3>
+        <table border="1">
+          <tbody>
+            <tr>
+              <th>شروع</th><th>اتمام</th><th>موافق</th><th>مخالف</th><th>انتخاب</th>
+            </tr>
+            { this.state.meeting.slots.map(slot => <SlotItem key={slot.id} slot={slot} path={path} /> )}
+          </tbody>
+        </table>
       </div>
     );
   }
@@ -50,10 +53,12 @@ function SlotItem(props) {
   let slot = props.slot;
   const roomSelectionPath = props.path + '/slots/' + slot.id;
   return (
-      <li>
-        <p>from {slot.from} to {slot.to} with votes: + : {slot.agreeCount} || - : {slot.disAgreeCount}</p>
-        <a href={roomSelectionPath}>انتخاب</a>
-      </li>
+      <tr>
+        <td>{slot.from}</td>
+        <td>{slot.to}</td>
+        <td>{slot.agreeCount}</td><td>{slot.disAgreeCount}</td>
+        <td><a href={roomSelectionPath}>انتخاب</a></td>
+      </tr>
   );
 }
 

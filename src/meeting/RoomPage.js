@@ -1,5 +1,4 @@
 import React from 'react';
-import './ProjectPage.css';
 import RequestUtil from '../common/Util';
 import { Redirect } from 'react-router-dom';
 
@@ -78,7 +77,7 @@ export default class RoomPage extends React.Component {
             <div className="job-item-title-container">
                 <h3 className="job-item-title">اتاق مورد نظر خود را انتخاب کنید:</h3>
                 <ul>
-                { roomList.map(room => <RoomListItem key={room} room={room} path={path} /> )}
+                  { roomList.map(room => <RoomListItem key={room} room={room} path={path} /> )}
                 </ul>
             </div>
             );
@@ -105,5 +104,3 @@ function RoomListItem(props) {
         </li>
     );
 }
-
-

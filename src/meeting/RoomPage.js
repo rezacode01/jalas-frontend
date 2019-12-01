@@ -6,6 +6,7 @@ export default class RoomPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      meeting: null,
       roomList: null
     };
     this.handleChangeSlotClick = this.handleChangeSlotClick.bind(this);
@@ -20,6 +21,7 @@ export default class RoomPage extends React.Component {
   getRoomList() {
     const {meetingID} = this.props.match.params;
     const path = `/meetings/${meetingID}/available_rooms`;
+    this.getMeetingInfo()
     RequestUtil.get(path, {
       'axios-retry': {
           retries: 50,
@@ -39,10 +41,24 @@ export default class RoomPage extends React.Component {
     });
   }
 
+  getMeetingInfo() {
+    const meetingID = this.props.match.params.meetingID;
+    RequestUtil.get(`/meetings/${meetingID}`).then(res => {
+      if (res.status === 200) {
+        const meetingInfo = res.data;
+        this.setState({ ...this.state,
+          meeting: meetingInfo
+        });
+      }
+    }).catch(err => {
+        console.log(err);
+    });
+  }
+
   handleChangeSlotClick() {
     const {meetingID} = this.props.match.params;
     const meetingPath = '/meetings/' + meetingID + '/status';
-    const data =  {status: "pending"};
+    const data =  {status: "PENDING"};
     RequestUtil.post(meetingPath, data).then(res => {
       console.log(res.data);
       if (res.status === 200) {
@@ -68,6 +84,17 @@ export default class RoomPage extends React.Component {
   }
 
   render() {
+    const meeting = this.state.meeting;
+    if (!meeting) {
+      return "صبر پلیز"
+    }
+
+    if (meeting.state === "PENDING") {
+      return <Redirect to={`/meetings/${meeting.id}`} />
+    } else if (meeting.state === "SUBMITTED_ROOM" || meeting.state === "RESERVED") {
+      return <Redirect to={`/meetings/${meeting.id}/status`} />
+    }
+
     let roomList = this.state.roomList;
     if (!this.state.roomList) {
       return <div>

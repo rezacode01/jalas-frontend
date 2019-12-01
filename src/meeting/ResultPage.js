@@ -1,6 +1,7 @@
 import React from 'react';
 import RequestUtil from '../common/Util';
 import { Redirect } from 'react-router-dom';
+
     
 
 export default class ResultPage extends React.Component {
@@ -52,7 +53,9 @@ export default class ResultPage extends React.Component {
 
     const meetingPath = `/meetings/${meeting.id}`;
     if (meeting.state === "PENDING") {
-        return <Redirect to={meetingPath} />
+      return <Redirect to={meetingPath} />
+    } if (meeting.state === "SUBMITTED_TIME") {
+      return <Redirect to={`/meetings/${meeting.id}/available_rooms`} />
     } else if (meeting.state === "ROOM_SUBMITTED") {
         status = "رزرو نشده"
     }
@@ -75,6 +78,9 @@ export default class ResultPage extends React.Component {
             </tr>
           </tbody>
         </table>
+        {meeting.state !== "ROOM_SUBMITTED" &&
+          <button onClick={this.handleCancel}>لغو رزرو</button>
+        }
       </div>
     );
   }

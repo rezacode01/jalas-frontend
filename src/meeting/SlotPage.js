@@ -1,5 +1,6 @@
 import React from 'react';
 import RequestUtil from '../common/Util';
+import { Redirect } from 'react-router-dom';
 
 export default class SlotPage extends React.Component {
   constructor(props) {
@@ -17,9 +18,8 @@ export default class SlotPage extends React.Component {
     RequestUtil.get(`/meetings/${meetingID}`).then(res => {
       console.log(res.data);
       if (res.status === 200) {
-        const meetingInfo = res.data;
         this.setState({ ...this.state,
-          meeting: meetingInfo
+          meeting: res.data
         });
       }
     }).catch(err => {
@@ -29,7 +29,6 @@ export default class SlotPage extends React.Component {
 
   handleSelectSlot(id, e) {
     e.preventDefault();
-    console.log(id, " selected");
     const meetingID = this.props.match.params.meetingID;
     const meetingPath = '/meetings/' + meetingID; 
     const path = meetingPath + "/slots/" + id;
@@ -45,6 +44,16 @@ export default class SlotPage extends React.Component {
   }
 
   render() {
+    const meeting = this.state.meeting;
+    if (!meeting) {
+      return <></>
+    }
+
+    if (meeting.state === "SUBMITTED_TIME") {
+      return <Redirect to={`/meetings/${meeting.id}/available_rooms`} />
+    } else if (meeting.state === "SUBMITTED_ROOM" || meeting.state === "RESERVED") {
+      return <Redirect to={`/meetings/${meeting.id}/status`} />
+    }
 
     return (
       <div className="job-item-title-container">

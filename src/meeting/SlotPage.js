@@ -39,7 +39,7 @@ export default class SlotPage extends React.Component {
       <div className="job-item-title-container">
         <h3 className="job-item-title">{this.state.meeting.title}</h3>
         <ul className="job-list">
-          { this.state.meeting.slots.map(slot => <SlotItem slot={slot} path={path} /> )}
+          { this.state.meeting.slots.map(slot => <SlotItem key={slot.id} slot={slot} path={path} /> )}
         </ul>
       </div>
     );

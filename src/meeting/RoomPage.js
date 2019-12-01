@@ -1,8 +1,7 @@
 import React from 'react';
 import './ProjectPage.css';
 import RequestUtil from '../common/Util';
-import { Redirect } from 'react-router-dom'
-import axiosRetry from 'axios-retry';
+import { Redirect } from 'react-router-dom';
 
 export default class RoomPage extends React.Component {
   constructor(props) {
@@ -14,8 +13,8 @@ export default class RoomPage extends React.Component {
   }
 
   handleChangeSlotClick() {
-    const {meetingID, userID, slotID} = this.props.match.params;
-    const meetingPath = '/meeting/' + meetingID;
+    const {meetingID, slotID} = this.props.match.params;
+    const meetingPath = '/meetings/' + meetingID;
     const path = meetingPath + '/slots/' + slotID;
     const data =  {status: "pending"};
     RequestUtil.post(path, data)
@@ -31,38 +30,55 @@ export default class RoomPage extends React.Component {
 
   componentDidMount() {
     document.title = "جلس";
-    const {meetingID, userID, slotID} = this.props.match.params;
-    const path = '/meeting/' + meetingID + '/slots/' + slotID;
-    RequestUtil.post(path, null, {
-        'axios-retry': {
-            retries: 20,
-            retryDelay: () => {
-                return 1000;
-            }
-        }
-    }).then(res => {
+    const {meetingID, slotID} = this.props.match.params;
+    const path = '/meetings/' + meetingID + '/slots/' + slotID;
+    RequestUtil.post(path, null)
+    .then(res => {
       console.log(res.data);
       if (res.status === 200) {
-        const roomList = res.data;
+        console.log("post done")
+        this.getRoomList();
+      }
+    }).catch(error => {
+        console.log(error);
+    });
+  }
+
+  getRoomList() {
+    const {meetingID} = this.props.match.params;
+    const path = `/meetings/${meetingID}/available_rooms`;
+    RequestUtil.get(path, {
+      'axios-retry': {
+          retries: 20
+      }
+    }).then(res => {
+      console.log("GETRoomList", res);
+      if (res.status === 200) {
+        const roomList = res.data.availableRooms;
         this.setState({ ...this.state, 
           roomList: roomList
         });
       }
     }).catch(error => {
-        console.log(error.response);
+        console.log("error", error.response);
     });
   }
 
   render() {
     let roomList = this.state.roomList;
-    const {meetingID, userID, slotID} = this.props.match.params;
-    const path = '/meeting/' + meetingID + '/slots/' + slotID;
-    if (this.state.roomList && this.state.roomList.length) {
+    const {meetingID, slotID} = this.props.match.params;
+    const path = '/meetings/' + meetingID + '/slots/' + slotID;
+    if (!this.state.roomList) {
+      return <div>
+          <h2>...صبرکنید</h2>
+        </div>
+    }
+    else if (this.state.roomList && this.state.roomList.length) {
         return (
             <div className="job-item-title-container">
                 <h3 className="job-item-title">اتاق مورد نظر خود را انتخاب کنید:</h3>
-                <ul className="job-list">
-                { roomList.slots.map(room => <RoomListItem room={room} path={path} /> )}
+                <ul>
+                { roomList.map(room => <RoomListItem key={room} room={room} path={path} /> )}
                 </ul>
             </div>
             );
@@ -81,10 +97,10 @@ export default class RoomPage extends React.Component {
 
 function RoomListItem(props) {
     let room = props.room;
-    const roomSelectionPath = props.path + '/rooms/' + room.id;
+    const roomSelectionPath = props.path + '/rooms/' + room;
     return (
         <li>
-          <span>{room.id}</span>
+          {room}
           <a href={roomSelectionPath}>انتخاب</a>
         </li>
     );

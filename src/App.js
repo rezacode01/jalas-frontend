@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Meeting from './meeting/Meeting.js';
 
 class App extends Component {
- 
+
   render() {
     return (
         <Router>

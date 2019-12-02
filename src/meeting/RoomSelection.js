@@ -38,17 +38,17 @@ export default class RoomSelection extends React.Component {
   }
 
   handleChangeSlotClick() {
-    const {meetingID} = this.props.match.params;
-    const meetingPath = '/meetings/' + meetingID;
-    const data =  {status: meetingPath + '/status'};
-    RequestUtil.post(meetingPath, data).then(res => {
-      console.log(res.data);
-      if (res.status === 200) {
-          this.props.onChangeStage('init')
-      }
-    }).catch(error => {
-        console.log(error.response);
-    });
+    const meetingID = this.props.meeting.id;
+    const data =  {status: 'PENDING'};
+    RequestUtil.post(`/meetings/${meetingID}/status`, data)
+      .then(res => {
+        if (res.status === 200) {
+            console.log("Revert successfully");
+            this.props.onChangeStage('init')
+        }
+      }).catch(error => {
+          console.log(error.response);
+      });
   }
   
   handleSelectRoom(id, e) {
@@ -71,7 +71,7 @@ export default class RoomSelection extends React.Component {
           <h2>...صبرکنید</h2>
         </div>
     }
-    else if (this.state.roomList && this.state.roomList.length) {
+    else if (this.state.roomList.length) {
         return (
             <div className="job-item-title-container">
                 <h3 className="job-item-title">اتاق مورد نظر خود را انتخاب کنید:</h3>

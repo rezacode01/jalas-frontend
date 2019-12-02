@@ -10,15 +10,16 @@ export default class Status extends React.Component {
   handleCancel(e) {
     e.preventDefault()
     const path = `/meetings/${this.props.meeting.id}`;
-    RequestUtil.post(path + '/status', {status: 'CANCELLED'}).then(res => {
-      console.log(res);
-      if (res.status === 200) {
-        console.log("Cancelled successfully")
-        this.props.onChangeStage('cancelled')
-      }
-    }).catch(error => {
-        console.log(error);
-    });
+    RequestUtil.post(path + '/status', {status: 'CANCELLED'})
+      .then(res => {
+        console.log(res);
+        if (res.status === 200) {
+          console.log("Cancelled successfully")
+        }
+      }).catch(error => {
+          console.log(error);
+      });
+    this.props.onChangeStage('cancelAttempt');
   }
 
   render() {
@@ -43,9 +44,6 @@ export default class Status extends React.Component {
             </tr>
           </tbody>
         </table>
-        {meeting.state !== "ROOM_SUBMITTED" &&
-          <button onClick={this.handleCancel}>لغو رزرو</button>
-        }
       </div>
     );
   }

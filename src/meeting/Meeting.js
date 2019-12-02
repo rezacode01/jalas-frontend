@@ -42,7 +42,7 @@ export default class Meeting extends React.Component {
         if (!meeting) {
             return <div>صبرکنید</div>
         }
-        console.log(meeting)
+        console.log(meeting.state)
 
         let display = <SlotSelection 
                         meeting={meeting} 

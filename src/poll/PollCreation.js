@@ -10,7 +10,8 @@ export default class PollCreation extends React.Component {
             participants: ["sajadbishop@gmail.com"],
             slots: [{from: date, to: new Date(date.getTime() + 1000*3600)}],
             title: "رای‌گیری 1",
-            user: "1"
+            user: "1",
+            message: ""
         }
     }
 
@@ -21,7 +22,7 @@ export default class PollCreation extends React.Component {
     makePoll = () => {
         const data =  {
             title: this.state.title,
-            participants: this.state.participants, 
+            participants: this.state.participants.filter(Boolean), 
             slots: this.state.slots.map(slot => {
                 return {
                     from: slot.from.getTime()/1000,
@@ -37,7 +38,7 @@ export default class PollCreation extends React.Component {
             headers
         }).then(res => {
             if (res.status === 200) {
-                console.log("Done")
+                this.props.history.push(`polls/${res.data.id}/vote`);
             }
         }).catch(function(error) {
             console.log(error);
@@ -125,9 +126,14 @@ export default class PollCreation extends React.Component {
                 onRemoveSlot = {this.removeSlot}
                 />
             )
+        
+        const style = {backgroundColor:'DodgerBlue'}
 
         return (
             <div>
+                {this.state.message && 
+                    <p style={style}>{this.state.message}</p>
+                }
                 <h2>رای‌گیری جدید</h2>
                 <div>
                     <h4>عنوان رای‌گیری</h4>

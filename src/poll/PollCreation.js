@@ -1,6 +1,8 @@
 import React from 'react';
 import DateTimePicker from 'react-datetime-picker';
 import API from '../common/API';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class PollCreation extends React.Component {
     constructor(props) {
@@ -9,9 +11,8 @@ export default class PollCreation extends React.Component {
         this.state = {
             participants: ["sajadbishop@gmail.com"],
             slots: [{from: date, to: new Date(date.getTime() + 1000*3600)}],
-            title: "رای‌گیری 1",
-            user: "1",
-            message: ""
+            title: "جلسون",
+            user: "1"
         }
     }
 
@@ -38,12 +39,15 @@ export default class PollCreation extends React.Component {
             headers
         }).then(res => {
             if (res.status === 200) {
-                this.props.history.push(`polls/${res.data.id}/vote`);
+                this.props.history.push(`/polls/${res.data.id}/vote`);
             }
-        }).catch(function(error) {
-            console.log(error);
+        }).catch(err => {
+            this.notifyError(err.response.data.message)
+            console.log(err.response)
         });
     }
+
+    notifyError = (message) => toast.error(message);
 
     handleTitleChange = (e) => {
         e.preventDefault();
@@ -126,14 +130,10 @@ export default class PollCreation extends React.Component {
                 onRemoveSlot = {this.removeSlot}
                 />
             )
-        
-        const style = {backgroundColor:'DodgerBlue'}
 
         return (
             <div>
-                {this.state.message && 
-                    <p style={style}>{this.state.message}</p>
-                }
+                <ToastContainer />
                 <h2>رای‌گیری جدید</h2>
                 <div>
                     <h4>عنوان رای‌گیری</h4>

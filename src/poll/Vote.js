@@ -9,7 +9,6 @@ export default class Vote extends React.Component {
         super(props);
         this.state = {
             poll: null,
-            votes: null,
             name: ""
         }
     }
@@ -28,13 +27,6 @@ export default class Vote extends React.Component {
                     this.setState({ ...this.state,
                         poll: res.data,
                     });
-                    if (!this.state.votes) {
-                        this.setState({ ...this.state,
-                            votes: this.state.poll.slots.map(s => {
-                                return {[s.id]: 0} 
-                            })
-                        });
-                    }
                 }
             }).catch(err => {
                 console.log(err);
@@ -64,11 +56,6 @@ export default class Vote extends React.Component {
         }).then(res => {
             if (res.status === 200) {
                 console.log("okay");
-                const newVotes = this.state.votes.slice()
-                newVotes[id] = vote
-                this.setState({ ...this.state,
-                    votes: newVotes
-                });
                 this.fetchPoll()
             }
         }).catch(function(error) {
@@ -86,10 +73,10 @@ export default class Vote extends React.Component {
     
     render() {
         const poll = this.state.poll;
-        if (!poll || !this.state.votes) {
+        if (!poll) {
             return <div>صبرکنید</div>
         }
-        console.log(this.state.votes)
+
         return (
             <div>
             ‍       <ToastContainer />
@@ -105,7 +92,6 @@ export default class Vote extends React.Component {
                     </tr>
                     { poll.slots.map(slot => <SlotItem 
                                                 key={slot.id} 
-                                                vote={this.state.votes[slot.id]} 
                                                 slot={slot} 
                                                 onVote={this.handleVote} /> 
                                                 )}
@@ -119,15 +105,14 @@ export default class Vote extends React.Component {
 
 function SlotItem(props) {
     let slot = props.slot;
-    let vote = props.vote;
     return (
         <tr>
             <td>{slot.from}</td>
             <td>{slot.to}</td>
             <td>{slot.agreeCount}</td><td>{slot.disAgreeCount}</td>
             <td>
-                <button disabled={vote===1 ? true: false} onClick={(e) => props.onVote(slot.id, 1, e)}>+</button>
-                <button disabled={vote===2 ? true: false} onClick={(e) => props.onVote(slot.id, 2, e)}>-</button>
+                <button onClick={(e) => props.onVote(slot.id, 1, e)}>+</button>
+                <button onClick={(e) => props.onVote(slot.id, 2, e)}>-</button>
             </td>
         </tr>
     );

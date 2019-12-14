@@ -26,8 +26,8 @@ export default class SlotSelection extends React.Component {
   render() {
     const meeting = this.props.meeting;
     return (
-      <div className="job-item-title-container">
-        <h3>{meeting.title}</h3>
+      <div>
+        <h3>انتخاب زمان جلسه</h3>
         <table border="1">
           <tbody>
             <tr>

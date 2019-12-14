@@ -43,24 +43,27 @@ export default class Meeting extends React.Component {
             return <div>صبرکنید</div>
         }
         console.log(meeting.state)
-
-        let display = <SlotSelection 
-                        meeting={meeting} 
-                        onChangeStage={this.changeStage} />
-
+        
+        let display = <div></div>
         if (meeting.state === "TIME_SUBMITTED") {
             display = <RoomSelection 
                         meeting={meeting} 
                         onChangeStage={this.changeStage} />
         }
-        else if (meeting.state === "ROOM_SUBMITTED" || meeting.state === "RESERVED") {
-            display = <Status 
+        else if (meeting.state === "PENDING") {
+            display = <SlotSelection 
                         meeting={meeting} 
                         onChangeStage={this.changeStage} />
         }
 
         return (
-            <div> {display} </div>
+            <div>
+                <h1>{meeting.title}</h1>
+                <Status 
+                    meeting={meeting} 
+                    onChangeStage={this.changeStage} />
+                <div> {display} </div>
+            </div>
         );
     }
 }

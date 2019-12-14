@@ -68,7 +68,7 @@ export default class RoomSelection extends React.Component {
     let roomList = this.state.roomList;
     if (!this.state.roomList) {
       return <div>
-          <h2>...صبرکنید</h2>
+          <h2>...سرور پاسخگو نیست. صبرکنید </h2>
         </div>
     }
     else if (this.state.roomList.length) {

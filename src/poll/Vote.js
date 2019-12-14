@@ -78,14 +78,14 @@ export default class Vote extends React.Component {
         }
 
         return (
-            <div>
+            <div className="container">
             ‍    <ToastContainer />
-                <h1>{poll.title}</h1>
-                <input 
+                <h1 className="text-right">{poll.title}</h1>
+                <input className="form-control"
                     type="text" placeholder="ایمیل خود را وارد کنید"
                     value={this.state.name} onChange={this.handleNameChange}
                 />
-                <table border="1">
+                <table className="table table-striped">
                 <tbody>
                     <tr>
                         <th>شروع</th><th>اتمام</th><th>موافق</th><th>مخالف</th><th>رای</th>
@@ -111,8 +111,10 @@ function SlotItem(props) {
             <td>{slot.to}</td>
             <td>{slot.agreeCount}</td><td>{slot.disAgreeCount}</td>
             <td>
-                <button onClick={(e) => props.onVote(slot.id, 1, e)}>+</button>
-                <button onClick={(e) => props.onVote(slot.id, 2, e)}>-</button>
+                <div className="btn-group btn-group-toggle btn-group-sm">
+                <button className="btn btn-primary" onClick={(e) => props.onVote(slot.id, 1, e)}>+</button>
+                <button className="btn btn-primary btn-dark" onClick={(e) => props.onVote(slot.id, 2, e)}>-</button>
+                </div>
             </td>
         </tr>
     );

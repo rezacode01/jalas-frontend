@@ -73,9 +73,9 @@ export default class RoomSelection extends React.Component {
     }
     else if (this.state.roomList.length) {
         return (
-            <div className="job-item-title-container">
-                <h3 className="job-item-title">اتاق مورد نظر خود را انتخاب کنید:</h3>
-                <ul>
+            <div>
+                <h3>اتاق مورد نظر خود را انتخاب کنید:</h3>
+                <ul className="list-group">
                   { roomList.map(room => { return <RoomListItem key={room} room={room} onSelect={this.handleSelectRoom} /> })}
                 </ul>
             </div>
@@ -96,7 +96,7 @@ export default class RoomSelection extends React.Component {
 function RoomListItem(props) {
     let room = props.room;
     return (
-        <li>
+        <li className="list-group-item-primary">
           <div>{room}-<button onClick={(e) => props.onSelect(room, e)}>انتخاب</button></div>
         </li>
     );

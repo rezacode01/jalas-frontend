@@ -37,7 +37,7 @@ export default class Status extends React.Component {
             <button onClick={this.handleCancel}>لغو درخواست</button>
           </div>
         }
-        <table border="1">
+        <table className="table table-striped table-dark">
           <tbody>
             <tr>
               <th>عنوان جلسه</th><th>شناسه</th><th>اتاق</th><th>زمان</th><th>وضعیت</th>

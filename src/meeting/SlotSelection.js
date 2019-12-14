@@ -28,7 +28,7 @@ export default class SlotSelection extends React.Component {
     return (
       <div>
         <h3>انتخاب زمان جلسه</h3>
-        <table border="1">
+        <table className="table table-striped">
           <tbody>
             <tr>
               <th>شروع</th><th>اتمام</th><th>موافق</th><th>مخالف</th><th>انتخاب</th>
@@ -48,7 +48,8 @@ function SlotItem(props) {
         <td>{slot.from}</td>
         <td>{slot.to}</td>
         <td>{slot.agreeCount}</td><td>{slot.disAgreeCount}</td>
-        <td><button onClick={(e) => props.onSelect(slot.id, e)}>انتخاب</button></td>
+        <td><button className="badge badge-primary badge-pill"
+          onClick={(e) => props.onSelect(slot.id, e)}>انتخاب</button></td>
       </tr>
   );
 }

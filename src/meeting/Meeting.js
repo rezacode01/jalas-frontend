@@ -57,12 +57,12 @@ export default class Meeting extends React.Component {
         }
 
         return (
-            <div>
-                <h1>{meeting.title}</h1>
+            <div className="container pt-3 text-right">
+                <h1 className="text-right">{meeting.title}</h1>
                 <Status 
                     meeting={meeting} 
                     onChangeStage={this.changeStage} />
-                <div> {display} </div>
+                <div className="container"> {display} </div>
             </div>
         );
     }

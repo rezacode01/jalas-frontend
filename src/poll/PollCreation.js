@@ -12,7 +12,8 @@ export default class PollCreation extends React.Component {
             participants: ["sajadbishop@gmail.com"],
             slots: [{from: date, to: new Date(date.getTime() + 1000*3600)}],
             title: "جلسون",
-            user: "1"
+            user: "1",
+            pending: false,
         }
     }
 
@@ -21,6 +22,11 @@ export default class PollCreation extends React.Component {
     }
 
     makePoll = () => {
+        if (!this.state.title.length || !this.state.participants.length || !this.state.slots) {
+            this.notifyError("ورودی‌ها نباید خالی باشند")
+            return;
+        }
+        this.setState({pending: true})
         const data =  {
             title: this.state.title,
             participants: this.state.participants.filter(Boolean), 
@@ -39,15 +45,17 @@ export default class PollCreation extends React.Component {
             headers
         }).then(res => {
             if (res.status === 200) {
+                this.setState({pending: false})
                 this.props.history.push(`/polls/${res.data.id}/vote`);
             }
         }).catch(err => {
-            this.notifyError(err.response.data.message)
+            this.notifyError("ایمیل‌ها معتبر نیستند")
             console.log(err.response)
         });
     }
 
-    notifyError = (message) => toast.error(message);
+    notifyError = (message) => toast.error(message, 
+     {position: toast.POSITION.BOTTOM_CENTER});
 
     handleTitleChange = (e) => {
         e.preventDefault();
@@ -132,31 +140,40 @@ export default class PollCreation extends React.Component {
             )
 
         return (
-            <div>
+            <div className="container-fluid my-3 text-right">
                 <ToastContainer />
                 <h2>رای‌گیری جدید</h2>
-                <div>
-                    <h4>عنوان رای‌گیری</h4>
-                    <input 
-                        type="text" placeholder="عنوان رای‌گیری"
-                        value={this.state.title} onChange={this.handleTitleChange}
-                    />
+                <div className="panel panel-default">
+                    <div className="md-form col-xs-4">
+                        <input className="md-textarea form-control text-right"
+                            type="text" placeholder="عنوان"
+                            value={this.state.title} onChange={this.handleTitleChange}
+                        />
+                    </div>
                 </div>
-                <div>
-                    <h4>شرکت کنندگان</h4>
-                    <button onClick={this.makeNewParticipant}>+</button>
-                    <ul>
-                        {participants}
-                    </ul>
+                <div className="card text-center mb-3">
+                    <div className="card-header">شرکت‌کنندگان</div>
+                    <div className="card-body  bg-dark">
+                        <button className="btn btn-sm btn-primary"
+                            onClick={this.makeNewParticipant}>+</button>
+                        <ul className="list-group">
+                            {participants}
+                        </ul>
+                    </div>
                 </div>
-                <div>
-                    <h4>زمان‌های پیشنهادی</h4>
-                    <button onClick={this.makeNewSlot}>+</button>
-                    <ul>
-                        {slots}
-                    </ul>
+                <div className="card text-center">
+                    <div className="card-header">زمان‌ها</div>
+                    <div className="card-body bg-dark">
+                        <button className="btn btn-sm btn-primary" 
+                            onClick={this.makeNewSlot}>+</button>
+                        <ul className="list-group">
+                            {slots}
+                        </ul>
+                    </div>
                 </div>
-                <button onClick={this.makePoll}>ایجاد</button>
+                <button className={`btn btn-primary btn-block`} onClick={this.makePoll}>
+                    <span className={this.state.pending && "spinner-border spinner-border-sm"}></span>
+                    ایجاد</button>
             </div>
         )
     }
@@ -164,19 +181,20 @@ export default class PollCreation extends React.Component {
 
 function ParticipantItem(props) {
     return (
-        <li key={props.index} >
+        <li key={props.index} className="list-group-item" >
             <input 
                     type="text" placeholder="شرکت کننده جدید"
                     value={props.email} onChange={(e) => props.onChangeParticipant(props.index, e)}
                 />
-            <button onClick={(e) => props.onRemoveParticipant(props.index, e)}>-</button>
+            <button className="btn btn-danger btn-sm" 
+                onClick={(e) => props.onRemoveParticipant(props.index, e)}>-</button>
         </li>
     )
 } 
 
 function SlotItem(props) {
     return (
-        <li key={props.index} >
+        <li key={props.index} className="list-group-item" >
             <div>
                 from
                 <DateTimePicker
@@ -189,7 +207,8 @@ function SlotItem(props) {
                     value={props.slot.to}
                     />
             </div>
-            <button onClick={(e) => props.onRemoveSlot(props.index, e)}>حذف بازه</button>
+            <button className="btn btn-danger btn-sm" 
+                onClick={(e) => props.onRemoveSlot(props.index, e)}>حذف بازه</button>
         </li>
     )
 } 

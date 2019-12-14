@@ -79,8 +79,8 @@ export default class Vote extends React.Component {
 
         return (
             <div>
-            ‍       <ToastContainer />
-                <h3>{poll.title}</h3>
+            ‍    <ToastContainer />
+                <h1>{poll.title}</h1>
                 <input 
                     type="text" placeholder="ایمیل خود را وارد کنید"
                     value={this.state.name} onChange={this.handleNameChange}

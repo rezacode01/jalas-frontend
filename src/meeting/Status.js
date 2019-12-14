@@ -24,7 +24,8 @@ export default class Status extends React.Component {
 
   render() {
     let meeting = this.props.meeting;
-    let status = meeting.state === "ROOM_SUBMITTED" ? "رزرو نشده" : "رزرو شده";
+    let status = meeting.state === "RESERVED" ? "رزرو شده" : 
+                 meeting.state === "CANCELLED" ? "لغو" : "رزرو نشده";
     meeting.selectedSlot = meeting.selectedSlot || 'ندارد'
     meeting.room = meeting.room || 'ندارد'
 

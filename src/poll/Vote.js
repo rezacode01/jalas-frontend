@@ -8,8 +8,7 @@ export default class Vote extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            poll: null,
-            name: ""
+            poll: null
         }
     }
 
@@ -39,25 +38,18 @@ export default class Vote extends React.Component {
 
     handleVote = (id, vote, e) => {
         e.preventDefault();
-        if (!this.state.name || this.state.name.length === 0) {
-            this.notify()
-            return;
-        }
         const data = {
-            username: this.state.name, 
             vote: vote === 2 ? "DISAGREE" : "AGREE"
         }
         const path = `meetings/${this.state.poll.id}/slots/${id}/vote`;
         RequestUtil.postJson(path, data).then(res => {
             if (res.status === 200) {
-                console.log("okay");
                 this.fetchPoll()
             }
         }).catch(function(error) {
             console.log(error);
         });
     }
-    notify = () => toast("ابتدا نام خود را وارد کنید");
 
     handleNameChange = (e) => {
         e.preventDefault();
@@ -76,10 +68,6 @@ export default class Vote extends React.Component {
             <div className="container">
             ‍    <ToastContainer />
                 <h1 className="text-right">{poll.title}</h1>
-                <input className="form-control"
-                    type="text" placeholder="ایمیل خود را وارد کنید"
-                    value={this.state.name} onChange={this.handleNameChange}
-                />
                 <table className="table table-striped">
                 <tbody>
                     <tr>

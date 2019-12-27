@@ -58,7 +58,7 @@ export default class Home extends React.Component {
 
         return (
             <div className="container text-right">
-                <h1>جلسات و نظردهی‌های شما</h1>
+                <h1>جلس</h1>
                 <a className="btn btn-primary" href={`polls/new`}>رای‌گیری جدید</a>
                 <div className="row">
                     <div className="col-sm-5 text-right">>
@@ -113,14 +113,16 @@ function MeetingList(props) {
   }
 
   function MeetingItem(props) {
-      let poll = props.meeting;
+      let meeting = props.meeting;
       
       return (
       <li className="list-group-item-primary">
           <div className="card">
             <div className="card-body">
-                <h5 className="card-title">{poll.title}</h5>
-                <h6 className="card-subtitle mb-2 text-muted">{poll.creator.username}</h6>
+                <h5 className="card-title">{meeting.title}</h5>
+                <h6 className="card-subtitle mb-2 text-muted">{meeting.creator.username}</h6>
+                {props.isOwn && <a className="btn btn-dark" href={`meetings/${meeting.id}`}>وضعیت</a>}
+                {meeting.state === "RESERVED" && <h6><span className="label label-default">رزروشده</span></h6>}
             </div>
           </div>
       </li>

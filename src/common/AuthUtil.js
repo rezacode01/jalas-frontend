@@ -15,8 +15,8 @@ export default class AuthUtil {
       withCredentials: true,
       params: {},
       auth: {
-        username: username,
-        password: password
+        username: 'dashboard',
+        password: 'YI75MdABASE2RR'
       },
       crossDomain: true,
       headers: { 

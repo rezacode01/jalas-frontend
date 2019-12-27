@@ -1,18 +1,53 @@
 import decode from "jwt-decode";
-import RequestUtil from "./Util";
+import querystring from 'querystring';
+import axios from 'axios';
 
 export default class AuthUtil {
 
   login = (username, password) => {
-    return RequestUtil.post(`/login`, {
+    const data = {
+        username: username,
+        password: password,
+        grant_type: 'password'
+      }
+    const options = {
+      method: 'post',
+      withCredentials: true,
+      params: {},
+      auth: {
         username: username,
         password: password
-    }).then(res => {
-      this.setToken(res.data);
-      return Promise.resolve(res);
-    }).catch(err => {
-      return false;
-    });
+      },
+      crossDomain: true,
+      headers: { 
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+      data: querystring.stringify(data),
+      url: "http://127.0.0.1:8048/oauth/token"
+    };
+    return axios(options).then(res => {
+        console.log('yes')
+        console.log(res)
+        this.setToken(res.data);
+        return Promise.resolve(res);
+      }).catch(err => {
+        console.log(err)
+        return false
+      });
+    // return API.post(`/oauth/token`, null, {
+    //   params: {
+    //     ID: 12345
+    //   },
+    //   data: querystring.stringify(data),
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   }
+    // }).then(res => {
+    //   this.setToken(res.data);
+    //   return Promise.resolve(res);
+    // }).catch(err => {
+    //   return false;
+    // });
   };
 
   loggedIn = () => {

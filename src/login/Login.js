@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import Footer from '../footer/Footer';
 import './Login.css';
 import AuthUtil from '../common/AuthUtil';
 import { toast } from 'react-toastify';
@@ -66,19 +65,18 @@ export default class Login extends Component {
             <>
                 <div className="login-page">
                     <div className="form">
-                        <a id="logo" className="col-auto d-flex align-items-center" href="/">
-                            <img src="/assets/images/logo.png" alt="logo"/>
-                        </a>
                         <form className="register-form" onSubmit={this.handleSubmit}>
                             <div className="row">
                                 <div className="col-6">
                                     <input name="username" type="text" className="ltr rtl-placeholder" placeholder="نام کاربری"
+                                        autoComplete="on"
                                         value={this.state.username}
                                         onChange={this.handleChange}
                                         />
                                 </div>
                                 <div className="col-6">
                                     <input name="password" type="password" className="ltr rtl-placeholder" placeholder="کلمه عبور" 
+                                        autoComplete="on"
                                         value={this.state.password}
                                         onChange={this.handleChange}
                                         />
@@ -86,11 +84,10 @@ export default class Login extends Component {
                             </div>
 
                             <button className="signup-button">ورود</button>
-                            <p className="message">ثبت نام نکرده‌اید؟ <a href="register">ثبت نام کنید</a></p>
+                            <p className="message">اگه ثبت‌نام نکرده‌اید، باید دستی اینکار را کنید</p>
                         </form>
                     </div>
                 </div>
-                <Footer />
             </>
         );
   }

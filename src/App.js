@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Login from 'login/Login.js';
-import Home from 'home/Home.js';
-import {Meeting} from './meeting/Meeting.js';
+import Login from './login/Login.js';
+import Home from './home/Home.js';
+import Meeting from './meeting/Meeting.js';
 import PollCreation from './poll/PollCreation.js';
 import Vote from './poll/Vote.js';
 import withAuth from './common/withAuth';

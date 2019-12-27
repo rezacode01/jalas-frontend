@@ -7,7 +7,7 @@ export default class CommentForm extends Component {
     this.state = {
       loading: false,
       error: "",
-
+        poll: this.props.poll,
       comment: {
         name: "",
         message: ""
@@ -42,7 +42,7 @@ export default class CommentForm extends Component {
     e.preventDefault();
 
     if (!this.isFormValid()) {
-      this.setState({ error: "All fields are required." });
+      this.setState({ error: "پیام خالی است" });
       return;
     }
     let { comment } = this.state;
@@ -53,14 +53,15 @@ export default class CommentForm extends Component {
 	    "replyTo": null
     } 
     // persist the comments on server
-    RequestUtil.postJson(`meetings/${this.props.poll}/comments`, data)
-    .then(res => res.json())
+    RequestUtil.postJson(`meetings/${this.state.poll}/comments`, data)
       .then(res => {
+          console.log(res)
         if (res.error) {
           this.setState({ loading: false, error: res.error });
         } else {
+            console.log("ok")
           // add time return from api and push comment to parent state
-          comment.time = res.time;
+          comment.date = res.data.date;
           this.props.addComment(comment);
 
           // clear the message box
@@ -71,18 +72,16 @@ export default class CommentForm extends Component {
         }
       })
       .catch(err => {
+          console.log(err)
         this.setState({
-          error: "Something went wrong while submitting form.",
+          error: "خطایی رخ داد",
           loading: false
         });
       });
   }
 
-  /**
-   * Simple validation
-   */
   isFormValid() {
-    return this.state.comment.name !== "" && this.state.comment.message !== "";
+    return this.state.comment.message !== "";
   }
 
   renderError() {
@@ -95,23 +94,14 @@ export default class CommentForm extends Component {
     return (
       <React.Fragment>
         <form method="post" onSubmit={this.onSubmit}>
-          <div className="form-group">
-            <input
-              onChange={this.handleFieldChange}
-              value={this.state.comment.name}
-              className="form-control"
-              placeholder="😎 Your Name"
-              name="name"
-              type="text"
-            />
-          </div>
 
           <div className="form-group">
             <textarea
               onChange={this.handleFieldChange}
               value={this.state.comment.message}
-              className="form-control"
-              placeholder="🤬 Your Comment"
+              className="form-control text-right"
+              style={{'direction': 'rtl'}}
+              placeholder="نظر شما"
               name="message"
               rows="5"
             />

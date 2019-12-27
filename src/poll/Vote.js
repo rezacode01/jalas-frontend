@@ -1,6 +1,7 @@
 import React from 'react';
 import API from '../common/API';
 import RequestUtil from '../common/Util';
+import CommentSection from '../comment/CommentSection'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -65,22 +66,34 @@ export default class Vote extends React.Component {
         }
 
         return (
-            <div className="container">
-            ‍    <ToastContainer />
-                <h1 className="text-right">{poll.title}</h1>
-                <table className="table table-striped">
-                <tbody>
-                    <tr>
-                        <th>شروع</th><th>اتمام</th><th>موافق</th><th>مخالف</th><th>رای</th>
-                    </tr>
-                    { poll.slots.map(slot => <SlotItem 
-                                                key={slot.id} 
-                                                slot={slot} 
-                                                onVote={this.handleVote} /> 
-                                                )}
-                </tbody>
-                </table>
-                <button onClick={this.arrangeMeeting}>ایجاد جلسه مربوطه</button>
+            <div className="container"> 
+                <div className="container">
+                ‍    <ToastContainer />
+                    <h1 className="text-right">{poll.title}</h1>
+                    <table className="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th>شروع</th><th>اتمام</th><th>موافق</th><th>مخالف</th><th>رای</th>
+                        </tr>
+                        { poll.slots.map(slot => <SlotItem 
+                                                    key={slot.id} 
+                                                    slot={slot} 
+                                                    onVote={this.handleVote} /> 
+                                                    )}
+                    </tbody>
+                    </table>
+                    {this.props.confirm.user_name === poll.creator.username &&  
+                        <button className="btn btn-primary" 
+                            onClick={this.arrangeMeeting}>
+                            ایجاد جلسه مربوطه</button>
+                    }
+                </div>
+                <div className="card card-border"
+                    style={{ marginUp: '3cm' }}
+                    >
+                    <CommentSection poll={poll.id} >
+                        </CommentSection>
+                </div>
             </div>
         );
     }

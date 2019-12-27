@@ -2,13 +2,15 @@ import React, { Component } from "react";
 
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
+import RequestUtil from "../common/Util";
 
-class CommentSection extends Component {
+export default class CommentSection extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       comments: [],
+      poll: this.props.poll,
       loading: false
     };
 
@@ -16,15 +18,13 @@ class CommentSection extends Component {
   }
 
   componentDidMount() {
-    // loading
     this.setState({ loading: true });
 
     // get all the comments
-    fetch("http://localhost:7777")
-      .then(res => res.json())
+    RequestUtil.get(`meetings/${this.state.poll}/comments`)
       .then(res => {
         this.setState({
-          comments: res,
+          comments: res.data.list,
           loading: false
         });
       })
@@ -33,10 +33,6 @@ class CommentSection extends Component {
       });
   }
 
-  /**
-   * Add new comment
-   * @param {Object} comment
-   */
   addComment(comment) {
     this.setState({
       loading: false,
@@ -45,40 +41,23 @@ class CommentSection extends Component {
   }
 
   render() {
-    const loadingSpin = this.state.loading ? "App-logo Spin" : "App-logo";
+    if (this.state.loading) return "صبرکنید"
     return (
-      <div className="App container bg-light shadow">
-        <header className="App-header">
-          <img src={logo} className={loadingSpin} alt="logo" />
-          <h1 className="App-title">
-            React Comments
-            <span className="px-2" role="img" aria-label="Chat">
-              💬
-            </span>
-          </h1>
-          <p>
-            Checkout the tutorial on{" "}
-            <a className="text-light" href="https://qcode.in">
-              QCode.in
-            </a>
-          </p>
-        </header>
-
+      <div className="container bg-light shadow">
         <div className="row">
-          <div className="col-4  pt-3 border-right">
-            <h6>Say something about React</h6>
-            <CommentForm addComment={this.addComment} />
-          </div>
-          <div className="col-8  pt-3 bg-white">
+
+          <div className="col-8  pt-3 bg-white text-right">
             <CommentList
               loading={this.state.loading}
               comments={this.state.comments}
             />
+          </div>
+          <div className="col-4  pt-3 border-right text-right">
+            <h6>نظر خود را اعلام کنید</h6>
+            <CommentForm addComment={this.addComment} poll={this.state.poll} />
           </div>
         </div>
       </div>
     );
   }
 }
-
-export default App;

@@ -48,12 +48,7 @@ export default class Vote extends React.Component {
             vote: vote === 2 ? "DISAGREE" : "AGREE"
         }
         const path = `meetings/${this.state.poll.id}/slots/${id}/vote`;
-        const headers = {
-            'Content-Type': 'application/json'
-        }
-        API.post(path, data, {
-            headers
-        }).then(res => {
+        RequestUtil.postJson(path, data).then(res => {
             if (res.status === 200) {
                 console.log("okay");
                 this.fetchPoll()

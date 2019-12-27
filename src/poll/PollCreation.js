@@ -3,6 +3,7 @@ import DateTimePicker from 'react-datetime-picker';
 import API from '../common/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import RequestUtil from '../common/Util';
 
 export default class PollCreation extends React.Component {
     constructor(props) {
@@ -37,19 +38,14 @@ export default class PollCreation extends React.Component {
                 }
             }),
         }
-        const path = `meetings?userId=${this.state.user}`
-        const headers = {
-            'Content-Type': 'application/json'
-        }
-        API.post(path, data, {
-            headers
-        }).then(res => {
+        const path = `meetings`
+        RequestUtil.postJson(path, data).then(res => {
             if (res.status === 200) {
                 this.setState({pending: false})
-                this.props.history.push(`/polls/${res.data.id}/vote`);
+                this.props.history.push(`/polls/${res.data.id}`);
             }
         }).catch(err => {
-            this.notifyError("ایمیل‌ها معتبر نیستند")
+            this.notifyError(err.response.code)
             console.log(err.response)
         });
     }

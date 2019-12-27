@@ -13,7 +13,6 @@ export default class AuthUtil {
     const options = {
       method: 'post',
       withCredentials: true,
-      params: {},
       auth: {
         username: 'dashboard',
         password: 'YI75MdABASE2RR'
@@ -26,28 +25,13 @@ export default class AuthUtil {
       url: "http://127.0.0.1:8048/oauth/token"
     };
     return axios(options).then(res => {
-        console.log('yes')
-        console.log(res)
-        this.setToken(res.data);
+        console.log(res.data)
+        this.setToken(res.data.access_token);
         return Promise.resolve(res);
       }).catch(err => {
         console.log(err)
         return false
       });
-    // return API.post(`/oauth/token`, null, {
-    //   params: {
-    //     ID: 12345
-    //   },
-    //   data: querystring.stringify(data),
-    //   headers: {
-    //     'Content-Type': 'application/x-www-form-urlencoded'
-    //   }
-    // }).then(res => {
-    //   this.setToken(res.data);
-    //   return Promise.resolve(res);
-    // }).catch(err => {
-    //   return false;
-    // });
   };
 
   loggedIn = () => {
@@ -58,8 +42,8 @@ export default class AuthUtil {
   isTokenExpired = token => {
     try {
       const decoded = decode(token);
-      console.log()
-      if (decoded.exp < Date.now() / 1000) {
+      console.log(decoded)
+      if (decoded.expires_in < Date.now() / 1000) {
         return true;
       } else {
         return false;
@@ -85,6 +69,7 @@ export default class AuthUtil {
   getConfirm = () => {
     // Using jwt-decode npm package to decode the token
     let answer = decode(this.getToken());
+    console.log(answer)
     return answer;
   };
 

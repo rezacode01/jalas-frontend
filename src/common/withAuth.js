@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import AuthUtil from "./AuthUtil";
+import Header from "../header/Header";
 
 /* A higher order component is frequently written as a function that returns a class. */
 export default function withAuth(AuthComponent) {
@@ -36,11 +37,15 @@ export default function withAuth(AuthComponent) {
         if (this.state.confirm) {
           return (
             /* component that is currently being wrapper(App.js) */
-            <AuthComponent
+            <div>
+              <Header></Header>
+              <AuthComponent
               history={this.props.history}
               match={this.props.match}
               confirm={this.state.confirm}
             />
+            </div>
+            
           );
         } else {
           console.log("not confirmed!");

@@ -15,10 +15,11 @@ class App extends Component {
           <div>
             <Switch>
                 <Route exact path="/login" component={Login} />
+                <Route exact path="/login" component={Login} />
                 <Route exact path="/" component={withAuth(Home)} />
                 <Route exact path="/meetings/:meetingID" component={withAuth(Meeting)} />
-                <Route exact path="/polls/:pollID" component={withAuth(Vote)} />
                 <Route exact path="/polls/new" component={withAuth(PollCreation)} />
+                <Route exact path="/polls/:pollID" component={withAuth(Vote)} />
             </Switch>
           </div>
         </Router>

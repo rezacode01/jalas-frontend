@@ -1,14 +1,38 @@
 import API from './API';
 import querystring from 'querystring';
 import AuthUtil from './AuthUtil';
+import axios from 'axios'
 
 const createReactClass = require('create-react-class');
 
+const base = "http://127.0.0.1:8048/" 
 const RequestUtil = createReactClass({
-  
+
   statics: {
+    postJson: function(url, data) {
+      let Auth =  new AuthUtil();
+        const headers = {
+          'Content-Type': 'application/json'
+        }
+        if (Auth.loggedIn()) {
+          headers["Authorization"] = "Bearer " +  Auth.getToken();
+      };
+      console.log(url)
+      const options = {
+        method: 'post',
+        withCredentials: true,
+        crossDomain: true,
+        headers: headers,
+        data: data,
+        url: base + url
+      };
+      return axios(options)
+    }, 
+
     post: function(url, data) {
+      
         let Auth =  new AuthUtil();
+        
         const headers = {
           'Content-Type': 'application/x-www-form-urlencoded'
         }

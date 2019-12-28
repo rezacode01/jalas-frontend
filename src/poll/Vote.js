@@ -4,18 +4,30 @@ import RequestUtil from '../common/Util';
 import CommentSection from '../comment/CommentSection'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DateTimePicker from 'react-datetime-picker';
+import Error from '../common/Error'
 
 export default class Vote extends React.Component {
     constructor(props) {
         super(props);
+        
         this.state = {
-            poll: null
+            poll: null,
+            addingSlot: false,
+            slot: null,
+            user: this.props.confirm.user_name,
         }
     }
 
     componentDidMount() {
         document.title = "رای";
         this.fetchPoll();
+        const date = new Date()
+        date.setDate(date.getDate() + 1)
+        console.log(date)
+        this.setState({...this.state,
+            slot: {from: date, to: new Date(date.getTime() + 1000*3600)}
+        })
     }
 
     fetchPoll() {
@@ -31,6 +43,42 @@ export default class Vote extends React.Component {
             }).catch(err => {
                 console.log(err);
             });
+    }
+
+    handleAddSlot = (e) => {
+        e.preventDefault()
+        console.log("here")
+        this.setState({...this.state,
+            addingSlot: true
+        })
+    }
+
+    handleChangeSlot = (from, date) => {
+        const slot = this.state.slot
+        if (from) slot.from = date
+        else slot.to = date
+        this.setState({...this.state,
+            slot: slot
+        })
+    }
+
+    handleSubmitSlot = (e) => {
+        e.preventDefault()
+        const s = this.state.slot;
+        this.setState({pending: true})
+        const path = `meetings/${this.state.poll.id}/slots/`
+        RequestUtil.postJson(path, {
+            from: s.from.getTime()/1000,
+            to: s.to.getTime()/1000
+        }).then(res => {
+            if (res.status === 200) {
+                this.setState({addingSlot: false})
+                this.fetchPoll()
+            }
+        }).catch(err => {
+            this.notifyError(err.response.code)
+            console.log(err.response)
+        })
     }
 
     arrangeMeeting = () => {
@@ -64,6 +112,10 @@ export default class Vote extends React.Component {
         if (!poll) {
             return <div>صبرکنید</div>
         }
+        const slot = this.state.slot
+        console.log(slot)
+        
+        const isOwn = this.props.confirm.user_name === poll.creator.username
 
         return (
             <div className="container"> 
@@ -82,8 +134,33 @@ export default class Vote extends React.Component {
                                                     )}
                     </tbody>
                     </table>
-                    {this.props.confirm.user_name === poll.creator.username &&  
-                        <button className="btn btn-primary" 
+                    {!isOwn ? "" : this.state.addingSlot ? 
+                        <div>
+                            <div>
+                            from
+                            <DateTimePicker
+                                onChange={(date) => this.handleChangeSlot(true, date)}
+                                value={slot.from}
+                                />
+                            to
+                            <DateTimePicker
+                                onChange={(date) => this.handleChangeSlot(false, date)}
+                                value={slot.to}
+                                />
+                            </div>
+                            <button className="btn btn-success btn-sm" 
+                                onClick={(e) => this.handleSubmitSlot(e)}>تایید</button>
+                        </div>
+                    :
+                        <button 
+                            type="button" 
+                            class="btn btn-secondary btn-lg btn-block"
+                            onClick={this.handleAddSlot}>
+                            اضافه‌کردن زمان جدید</button>
+                    }
+                    
+                    {isOwn &&  
+                        <button className="btn btn-primary btn-lg btn-block" 
                             onClick={this.arrangeMeeting}>
                             ایجاد جلسه مربوطه</button>
                     }

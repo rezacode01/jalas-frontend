@@ -61,14 +61,14 @@ export default class Home extends React.Component {
                 <h1>جلس</h1>
                 <a className="btn btn-primary" href={`polls/new`}>رای‌گیری جدید</a>
                 <div className="row">
-                    <div className="col-sm-5 text-right">>
+                    <div className="col-sm-5 text-right">
                         <MeetingList 
                             title="جلسات شما"
                             meetings={meetings} 
                             user={user}>
                             </MeetingList>
                     </div>
-                    <div className="col-sm-5 text-right">>
+                    <div className="col-sm-5 text-right">
                         <PollList 
                             polls={polls} 
                             user={user}>
@@ -100,7 +100,7 @@ function MeetingList(props) {
     let meetings = props.polls;
     return (
         <div>
-            <h2>نظردهی</h2>
+            <h2>رای‌گیری‌ها</h2>
             <ul className="list-group">
                 { meetings.map(meeting => { return <PollItem key={meeting.id} 
                                                                 poll={meeting} onSelect={1} 
@@ -121,8 +121,8 @@ function MeetingList(props) {
             <div className="card-body">
                 <h5 className="card-title">{meeting.title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{meeting.creator.username}</h6>
-                {props.isOwn && <a className="btn btn-dark" href={`meetings/${meeting.id}`}>وضعیت</a>}
-                {meeting.state === "RESERVED" && <h6><span className="label label-default">رزروشده</span></h6>}
+                <a className="btn btn-dark stretched-link" href={`meetings/${meeting.id}`}>وضعیت</a>
+                {meeting.state === "RESERVED" && <h6><span className="badge badge-default">رزروشده</span></h6>}
             </div>
           </div>
       </li>
@@ -137,8 +137,7 @@ function MeetingList(props) {
             <div className="card-body">
                 <h5 className="card-title">{poll.title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{poll.creator.username}</h6>
-                <a className="btn btn-primary" href={`polls/${poll.id}`}>رای</a>
-                {props.isOwn && <a className="btn btn-dark" href={`polls/${poll.id}/edit`}>تغییر</a>}
+                <a className="btn btn-primary stretched-link" href={`polls/${poll.id}`}> رای دهید</a>
             </div>
           </div>
       </li>

@@ -6,6 +6,7 @@ import Meeting from './meeting/Meeting.js';
 import PollCreation from './poll/PollCreation.js';
 import Vote from './poll/Vote.js';
 import withAuth from './common/withAuth';
+import EditPoll from './poll/EditPoll';
 
 class App extends Component {
 
@@ -15,11 +16,11 @@ class App extends Component {
           <div>
             <Switch>
                 <Route exact path="/login" component={Login} />
-                <Route exact path="/login" component={Login} />
                 <Route exact path="/" component={withAuth(Home)} />
                 <Route exact path="/meetings/:meetingID" component={withAuth(Meeting)} />
                 <Route exact path="/polls/new" component={withAuth(PollCreation)} />
                 <Route exact path="/polls/:pollID" component={withAuth(Vote)} />
+                <Route exact path="/polls/:pollID/edit" component={withAuth(EditPoll)} />
             </Switch>
           </div>
         </Router>
@@ -28,3 +29,13 @@ class App extends Component {
 }
 
 export default App;
+        {/* <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+        </dependency> */}

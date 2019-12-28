@@ -4,16 +4,16 @@ import API from '../common/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RequestUtil from '../common/Util';
+import SlotAddItem from './SlotAddItem'
 
 export default class PollCreation extends React.Component {
     constructor(props) {
         super(props);
-        const date = new Date()
+        const date = new Date((new Date).getTime() + 24*1000*3600)
         this.state = {
-            participants: ["sajadbishop@gmail.com"],
+            participants: [],
             slots: [{from: date, to: new Date(date.getTime() + 1000*3600)}],
             title: "جلسون",
-            user: "1",
             pending: false,
         }
     }
@@ -23,7 +23,8 @@ export default class PollCreation extends React.Component {
     }
 
     makePoll = () => {
-        if (!this.state.title.length || !this.state.participants.length || !this.state.slots) {
+        const participants = this.state.participants.filter(p => p !== "")
+        if (!this.state.title.length || !participants.length || !this.state.slots) {
             this.notifyError("ورودی‌ها نباید خالی باشند")
             return;
         }
@@ -126,7 +127,7 @@ export default class PollCreation extends React.Component {
             )
         
         let slots = this.state.slots.map((s, index) =>
-            <SlotItem 
+            <SlotAddItem 
                 key={index}
                 index={index} 
                 slot={s}
@@ -184,27 +185,6 @@ function ParticipantItem(props) {
                 />
             <button className="btn btn-danger btn-sm" 
                 onClick={(e) => props.onRemoveParticipant(props.index, e)}>-</button>
-        </li>
-    )
-} 
-
-function SlotItem(props) {
-    return (
-        <li key={props.index} className="list-group-item" >
-            <div>
-                from
-                <DateTimePicker
-                    onChange={(date) => props.onChangeSlot(props.index, true, date)}
-                    value={props.slot.from}
-                    />
-                to
-                <DateTimePicker
-                    onChange={(date) => props.onChangeSlot(props.index, false, date)}
-                    value={props.slot.to}
-                    />
-            </div>
-            <button className="btn btn-danger btn-sm" 
-                onClick={(e) => props.onRemoveSlot(props.index, e)}>حذف بازه</button>
         </li>
     )
 } 

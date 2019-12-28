@@ -21,13 +21,12 @@ export default class Panel extends React.Component {
             this.setState({panel: res.data})
         }
     }).catch(err => {
-        if (err.response && err.response.status === 403) {
+        if (err.response && err.response.status > 400) {
             this.props.history.replace('/401')
         }
         console.log(err)
     })
 }
-
 
   render() {
     const panel = this.state.panel;

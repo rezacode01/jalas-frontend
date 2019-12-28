@@ -7,7 +7,7 @@ import SlotAddItem from './SlotAddItem'
 export default class PollCreation extends React.Component {
     constructor(props) {
         super(props);
-        const date = new Date((new Date).getTime() + 24*1000*3600)
+        const date = new Date(new Date.getTime() + 24*1000*3600)
         this.state = {
             participants: [],
             slots: [{from: date, to: new Date(date.getTime() + 1000*3600)}],

@@ -4,41 +4,49 @@ import RequestUtil from '../common/Util';
 export default class Panel extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+        panel: null
+    }
   }
 
   componentDidMount() {
     document.title = "پنل";
     console.log(this.props.confirm)
-    RequestUtil.get('Admin/general').then(res => {
+    if (false) {
+        this.props.history.replace('/401')
+    }
+    RequestUtil.get('admin/general').then(res => {
         if (res.status === 200) {
             console.log(res.data)
+            this.setState({panel: res.data})
         }
     }).catch(err => {
+        if (err.response && err.response.status === 403) {
+            this.props.history.replace('/401')
+        }
         console.log(err)
     })
 }
 
 
   render() {
-
+    const panel = this.state.panel;
+    if (!panel) return "";
     return (
       <div>
-        {meeting.state === "ROOM_SUBMITTED" &&
-          <div>
-            <h1>درخواست رزرو شما ثبت شده است</h1>
-            <button onClick={this.handleCancel}>لغو درخواست</button>
-          </div>
-        }
+       <h1 className="text-right">پنل مدیریت</h1>
         <table className="table table-striped table-dark">
           <tbody>
             <tr>
-              <th>عنوان جلسه</th><th>شناسه</th><th>اتاق</th><th>زمان</th><th>وضعیت</th>
+              <th>تعداد رزروها</th><th>لغوشده‌ها</th><th>تغییریافته‌ها</th><th>میانگین زمان پاسخ</th>
             </tr>
             <tr>
-              <td></td><td></td><td></td><td></td><td></td>
+              <td>{panel["Reserved rooms"]}</td><td>{panel["Cancelled meetings"]}</td><td>
+                {panel["Changed meetings"]}</td><td>{panel["Average response time"]}</td>
             </tr>
           </tbody>
         </table>
       </div>
     );
   }
+}

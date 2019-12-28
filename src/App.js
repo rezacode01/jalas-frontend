@@ -7,8 +7,8 @@ import PollCreation from './poll/PollCreation.js';
 import Vote from './poll/Vote.js';
 import withAuth from './common/withAuth';
 import EditPoll from './poll/EditPoll';
-import ErrorPage from './common/Error'
-import 
+import ErrorPage from './common/ErrorPage'
+import Panel from './Admin/Panel'
 
 class App extends Component {
 
@@ -18,7 +18,7 @@ class App extends Component {
           <div>
             <Switch>
                 <Route exact path="/login" component={Login} />
-                <Route exact path="/admin_panel" component={withAuth(Panel)} />
+                <Route exact path="/admin" component={withAuth(Panel)} />
                 <Route exact path="/" component={withAuth(Home)} />
                 <Route exact path="/meetings/:meetingID" component={withAuth(Meeting)} />
                 <Route exact path="/polls/new" component={withAuth(PollCreation)} />

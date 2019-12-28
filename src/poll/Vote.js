@@ -25,14 +25,6 @@ export default class Vote extends React.Component {
         this.setState({...this.state,
             slot: {from: date, to: new Date(date.getTime() + 1000*3600)}
         })
-        this.checkAuthorization()
-    }
-
-    checkAuthorization() {
-        console.log(this.state.poll)
-        if (this.state.user == "me") {
-            this.props.history.replace('/403')
-        }
     }
 
     fetchPoll() {

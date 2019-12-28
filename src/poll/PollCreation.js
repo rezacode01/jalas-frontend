@@ -1,6 +1,4 @@
 import React from 'react';
-import DateTimePicker from 'react-datetime-picker';
-import API from '../common/API';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RequestUtil from '../common/Util';

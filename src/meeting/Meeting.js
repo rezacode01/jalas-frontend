@@ -33,6 +33,9 @@ export default class Meeting extends React.Component {
                     });
                 }
             }).catch(err => {
+                if (err.response.status === 403) {
+                    this.props.history.replace('/401')
+                }
                 console.log(err);
             });
     }

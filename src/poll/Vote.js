@@ -1,16 +1,13 @@
 import React from 'react';
-import API from '../common/API';
 import RequestUtil from '../common/Util';
 import CommentSection from '../comment/CommentSection'
-import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DateTimePicker from 'react-datetime-picker';
-import Error from '../common/Error'
+import { toast, ToastContainer } from 'react-toastify';
 
 export default class Vote extends React.Component {
     constructor(props) {
         super(props);
-        
         this.state = {
             poll: null,
             addingSlot: false,
@@ -28,6 +25,14 @@ export default class Vote extends React.Component {
         this.setState({...this.state,
             slot: {from: date, to: new Date(date.getTime() + 1000*3600)}
         })
+        this.checkAuthorization()
+    }
+
+    checkAuthorization() {
+        console.log(this.state.poll)
+        if (this.state.user == "me") {
+            this.props.history.replace('/403')
+        }
     }
 
     fetchPoll() {
@@ -41,6 +46,9 @@ export default class Vote extends React.Component {
                     });
                 }
             }).catch(err => {
+                if (err.response.status === 403) {
+                    this.props.history.replace('/401')
+                }
                 console.log(err);
             });
     }

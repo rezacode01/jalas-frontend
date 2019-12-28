@@ -50,12 +50,6 @@ export default class Home extends React.Component {
            return  a.creator.username !== user
         })
 
-        console.log(polls)
-        // const myMeetings = meetings.filter(m => m.creator === user)
-        // const myPolls = polls.filter(p => p.creator === user)
-        // const otherMeetings = meetings.filter(m => m.creator !== user)
-        // const otherPolls = polls.filter(m => m.creator !== user)
-
         return (
             <div className="container text-right">
                 <h1>جلس</h1>
@@ -137,7 +131,9 @@ function MeetingList(props) {
             <div className="card-body">
                 <h5 className="card-title">{poll.title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{poll.creator.username}</h6>
-                <a className="btn btn-primary stretched-link" href={`polls/${poll.id}`}> رای دهید</a>
+                <a className="btn btn-primary stretched-link" href={`polls/${poll.id}`}>
+                {props.isOwn ? "جلسه شما" : "شرکت‌کننده"}
+                </a>
             </div>
           </div>
       </li>

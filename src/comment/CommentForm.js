@@ -62,7 +62,7 @@ export default class CommentForm extends Component {
             console.log("ok")
           // add time return from api and push comment to parent state
           comment.date = res.data.date;
-          this.props.addComment(comment);
+          this.props.addComment(res.data);
 
           // clear the message box
           this.setState({

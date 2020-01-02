@@ -31,7 +31,7 @@ export default class CommentSection extends Component {
       });
       this.setState({
         comments: comments.sort((a, b) => {
-          return a.date < b.date
+          return a.date > b.date
       }),
         loading: false
       });
@@ -51,6 +51,11 @@ export default class CommentSection extends Component {
 
   render() {
     if (this.state.loading) return "صبرکنید"
+    let comments = this.state.comments
+    comments.sort((a, b) => {
+      return b.date - a.date
+    })
+    console.log(comments)
     return (
       <div className="container bg-light shadow">
         <div className="row">
@@ -58,7 +63,7 @@ export default class CommentSection extends Component {
           <div className="col-8  pt-3 bg-white text-right">
             <CommentList
               loading={this.state.loading}
-              comments={this.state.comments}
+              comments={comments}
             />
           </div>
           <div className="col-4  pt-3 border-right text-right">

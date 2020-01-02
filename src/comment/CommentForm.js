@@ -38,7 +38,6 @@ export default class CommentForm extends Component {
    * Form submit handler
    */
   onSubmit(e) {
-    // prevent default form submission
     e.preventDefault();
 
     if (!this.isFormValid()) {
@@ -46,24 +45,23 @@ export default class CommentForm extends Component {
       return;
     }
     let { comment } = this.state;
-    // loading status and clear error
+    
     this.setState({ error: "", loading: true });
     const data = {
         "message": JSON.stringify(comment.message),
 	      "replyTo": null
     } 
-    // persist the comments on server
+    
     RequestUtil.postJson(`meetings/${this.state.poll}/comments`, data)
       .then(res => {
           console.log(res)
         if (res.error) {
           this.setState({ loading: false, error: res.error });
         } else {
-          // add time return from api and push comment to parent state
+          
           res.data.date = new Date();
           this.props.addComment(res.data);
 
-          // clear the message box
           this.setState({
             loading: false,
             comment: { ...comment, message: "" }

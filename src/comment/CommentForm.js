@@ -50,7 +50,7 @@ export default class CommentForm extends Component {
     this.setState({ error: "", loading: true });
     const data = {
         "message": JSON.stringify(comment.message),
-	    "replyTo": null
+	      "replyTo": null
     } 
     // persist the comments on server
     RequestUtil.postJson(`meetings/${this.state.poll}/comments`, data)
@@ -59,9 +59,8 @@ export default class CommentForm extends Component {
         if (res.error) {
           this.setState({ loading: false, error: res.error });
         } else {
-            console.log("ok")
           // add time return from api and push comment to parent state
-          comment.date = res.data.date;
+          res.data.date = new Date();
           this.props.addComment(res.data);
 
           // clear the message box

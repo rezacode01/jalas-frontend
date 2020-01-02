@@ -3,7 +3,6 @@ import RequestUtil from '../common/Util';
 import CommentSection from '../comment/CommentSection'
 import 'react-toastify/dist/ReactToastify.css';
 import DateTimePicker from 'react-datetime-picker';
-import { toast, ToastContainer } from 'react-toastify';
 
 export default class Vote extends React.Component {
     constructor(props) {
@@ -21,7 +20,6 @@ export default class Vote extends React.Component {
         this.fetchPoll();
         const date = new Date()
         date.setDate(date.getDate() + 1)
-        console.log(date)
         this.setState({...this.state,
             slot: {from: date, to: new Date(date.getTime() + 1000*3600)}
         })
@@ -31,7 +29,6 @@ export default class Vote extends React.Component {
         const pollID = this.props.match.params.pollID;
         RequestUtil.get(`/meetings/${pollID}`)
             .then(res => {
-                console.log(res.data);
                 if (res.status === 200) {
                     this.setState({ ...this.state,
                         poll: res.data,
@@ -113,14 +110,11 @@ export default class Vote extends React.Component {
             return <div>صبرکنید</div>
         }
         const slot = this.state.slot
-        console.log(slot)
-        
         const isOwn = this.props.confirm.user_name === poll.creator.username
 
         return (
             <div className="container"> 
                 <div className="container">
-                ‍    <ToastContainer />
                     <h1 className="text-right">{poll.title}</h1>
                     <table className="table table-striped">
                     <tbody>
@@ -154,7 +148,7 @@ export default class Vote extends React.Component {
                     :
                         <button 
                             type="button" 
-                            class="btn btn-secondary btn-lg btn-block"
+                            className="btn btn-secondary btn-lg btn-block"
                             onClick={this.handleAddSlot}>
                             اضافه‌کردن زمان جدید</button>
                     }

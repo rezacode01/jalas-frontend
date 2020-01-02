@@ -42,7 +42,6 @@ export default class AuthUtil {
   isTokenExpired = token => {
     try {
       const decoded = decode(token);
-      console.log(decoded)
       if (decoded.expires_in < Date.now() / 1000) {
         return true;
       } else {

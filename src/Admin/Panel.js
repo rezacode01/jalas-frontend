@@ -12,9 +12,6 @@ export default class Panel extends React.Component {
   componentDidMount() {
     document.title = "پنل";
     console.log(this.props.confirm)
-    if (false) {
-        this.props.history.replace('/401')
-    }
     RequestUtil.get('admin/general').then(res => {
         if (res.status === 200) {
             console.log(res.data)

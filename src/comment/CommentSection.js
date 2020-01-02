@@ -19,18 +19,27 @@ export default class CommentSection extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
+    this.fetchComments()
+  }
 
-    // get all the comments
+  fetchComments() {
     RequestUtil.get(`meetings/${this.state.poll}/comments`)
-      .then(res => {
-        this.setState({
-          comments: res.data.list,
-          loading: false
-        });
-      })
-      .catch(err => {
-        this.setState({ loading: false });
+    .then(res => {
+      let comments = res.data.list
+      comments.forEach(comment => {
+        comment.date = new Date(comment.date)
       });
+      this.setState({
+        comments: comments.sort((a, b) => {
+          return a.date < b.date
+      }),
+        loading: false
+      });
+    })
+    .catch(err => {
+      console.log(err)
+      this.setState({ loading: false });
+    });
   }
 
   addComment(comment) {

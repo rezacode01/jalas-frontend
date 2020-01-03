@@ -1,15 +1,100 @@
-import React from "react";
+import React, { Component } from "react";
 
-export default function Comment(props) {
-  const { user, message, date } = props.comment;
+export default class Comment extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      comment: props.comment,
+      replyText: "",
+      editText: "",
+      isEditing: false,
+      isReplying: false
+    }
+  }
 
-  return (
-    <div className="media mb-3">
-      <div className="media-body p-2 shadow-sm rounded bg-light border">
-        <small className="col-3 float-right text-muted">{date.toLocaleDateString()}</small>
-        <h6 className="mt-0 mb-1 text-muted">{user.fullname}</h6>
-        {message}
+  handleEditChange = (e) => {
+  }
+
+  handleReplyChange = (e) => {
+    this.setState({
+      replyText: e.target.value
+    })
+  }
+
+  handleEdit = (e) => {
+    e.preventDefault()
+    this.setState({
+      isEditing: true,
+      isReplying: false
+    })
+  }
+
+  handleReply = (e) => {
+    e.preventDefault()
+    this.setState({
+      isReplying: true,
+      isEditing: false
+    })
+  }
+
+  handleCancelReply = () => {
+    this.setState({
+      isReplying: false
+    })
+  }
+
+  handleSubmitReply = () => {
+    this.setState({
+      isReplying: false,
+      replyText: ""
+    })
+  }
+
+  handleDelete() {
+
+  }
+
+  render() {
+    const { user, message, date } = this.state.comment;
+
+    return (
+      <div className="row media mb-3">
+        <div className="media-body p-2 col-12 shadow-sm rounded bg-light border">
+          <div className="col-12">
+            <small className="col-3 float-right text-muted">{date.toLocaleDateString()}</small>
+            <h6 className="mt-0 mb-1 text-muted">{user.fullname}</h6>
+          </div>    
+         <div className="col-12">{message}</div> 
+         <div className="row">
+           <div className="float-left">
+              <button className="btn btn-default"
+                onClick={this.handleEdit}
+              >ویرایش</button>
+              <button className="btn btn-default"
+                onClick={this.handleDelete}
+              >حذف</button>
+           </div>
+         <button className="btn btn-success float-right"
+          onClick={this.handleReply}
+          >پاسخ</button>  
+         </div> ‍
+         {this.state.isReplying && true &&
+         <div>
+          <textarea
+              onChange={this.handleReplyChange}
+              value={this.state.reply}
+              className="form-control text-right col-12"
+              style={{'direction': 'rtl'}}
+              placeholder="نظر شما"
+              name="message"
+              rows="5"
+            />
+            <button onClick={this.handleSubmitReply}>ارسال</button>
+            <button onClick={this.handleCancelReply}>لغو</button>
+          </div>
+         }
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

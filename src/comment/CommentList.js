@@ -3,7 +3,7 @@ import Comment from "./Comment";
 
 export default function CommentList(props) {
   return (
-    <div className="commentList">
+    <div>
       <h5 className="text-muted mb-4">
         <span className="badge badge-success">{props.comments.length}</span>{" "}
         نظرات

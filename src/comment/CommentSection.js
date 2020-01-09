@@ -19,7 +19,7 @@ export default class CommentSection extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
-    this.fetchComments()
+    this.fetchComments();
   }
 
   fetchComments() {
@@ -29,10 +29,9 @@ export default class CommentSection extends Component {
       comments.forEach(comment => {
         comment.date = new Date(comment.date)
       });
+      let unflattenedComments = this.unflattenComments(comments)
       this.setState({
-        comments: comments.sort((a, b) => {
-          return a.date > b.date
-      }),
+        comments: unflattenedComments,
         loading: false
       });
     })
@@ -42,7 +41,29 @@ export default class CommentSection extends Component {
     });
   }
 
+  unflattenComments(arr) {
+    var tree = [],
+        mappedArr = {},
+        arrElem,
+        mappedElem;
+    for(var i = 0, len = arr.length; i < len; i++) {
+      arrElem = arr[i];
+      mappedArr[arrElem.cid] = arrElem;
+      mappedArr[arrElem.cid]['children'] = [];
+    }
+    for (var id in mappedArr) {
+      mappedElem = mappedArr[id];
+      if (mappedElem.replyTo) {
+        mappedArr[mappedElem['replyTo'].cid]['children'].push(mappedElem);
+      } else {
+        tree.push(mappedElem);
+      }
+    }
+    return tree;
+  } 
+
   addComment(comment) {
+    console.log(comment)
     this.setState({
       loading: false,
       comments: [comment, ...this.state.comments]
@@ -55,7 +76,6 @@ export default class CommentSection extends Component {
     comments.sort((a, b) => {
       return b.date - a.date
     })
-    console.log(comments)
     return (
       <div className="container bg-light shadow">
         <div className="row">

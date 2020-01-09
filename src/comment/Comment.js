@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import CommentList from "./CommentList";
+
 
 export default class Comment extends Component {
   constructor(props) {
@@ -50,16 +52,16 @@ export default class Comment extends Component {
     })
   }
 
-  handleDelete() {
+  handleDelete = () => {
 
   }
 
   render() {
+    let comment = this.state.comment
     const { user, message, date } = this.state.comment;
-
     return (
-      <div className="row media mb-3">
-        <div className="media-body p-2 col-12 shadow-sm rounded bg-light border">
+      <div className="row media px-3 mb-2">
+        <div className="media-body p-1 col-12 shadow-sm rounded bg-light border">
           <div className="col-12">
             <small className="col-3 float-right text-muted">{date.toLocaleDateString()}</small>
             <h6 className="mt-0 mb-1 text-muted">{user.fullname}</h6>
@@ -78,7 +80,7 @@ export default class Comment extends Component {
           onClick={this.handleReply}
           >پاسخ</button>  
          </div> ‍
-         {this.state.isReplying && true &&
+         {this.state.isReplying &&
          <div>
           <textarea
               onChange={this.handleReplyChange}
@@ -92,6 +94,9 @@ export default class Comment extends Component {
             <button onClick={this.handleSubmitReply}>ارسال</button>
             <button onClick={this.handleCancelReply}>لغو</button>
           </div>
+         }
+         {comment.children.length > 0 &&
+          <CommentList comments={comment.children} />
          }
         </div>
       </div>

@@ -28,7 +28,36 @@ const RequestUtil = createReactClass({
       };
       return axios(options)
     }, 
-
+    delete: function(url, data) {
+          
+      let Auth =  new AuthUtil();
+      
+      const headers = {
+        'Content-Type': 'application/json'
+      }
+      if (Auth.loggedIn()) {
+        headers["Authorization"] = "Bearer " +  Auth.getToken();
+      };
+      return axios.options({
+        method: 'delete',
+        url: base + url,
+        headers: headers,
+        data: data
+      })
+    },
+    put: function(url, data) {
+      let Auth =  new AuthUtil();
+      
+      const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+      if (Auth.loggedIn()) {
+        headers["Authorization"] = "Bearer " +  Auth.getToken();
+      };
+      return API.post(url, querystring.stringify(data), { 
+          headers
+      });
+    },
     post: function(url, data) {
       
         let Auth =  new AuthUtil();

@@ -9,13 +9,10 @@ export default class CommentForm extends Component {
       error: "",
         poll: this.props.poll,
       comment: {
-        name: "",
         message: ""
       }
     };
 
-    // bind context to methods
-    this.handleFieldChange = this.handleFieldChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -24,7 +21,6 @@ export default class CommentForm extends Component {
    */
   handleFieldChange = event => {
     const { value, name } = event.target;
-
     this.setState({
       ...this.state,
       comment: {
@@ -54,17 +50,16 @@ export default class CommentForm extends Component {
     
     RequestUtil.postJson(`meetings/${this.state.poll}/comments`, data)
       .then(res => {
-          console.log(res)
         if (res.error) {
           this.setState({ loading: false, error: res.error });
         } else {
-          
+          console.log(res)
           res.data.date = new Date();
           this.props.addComment(res.data);
 
           this.setState({
             loading: false,
-            comment: { ...comment, message: "" }
+            comment: { message: "" }
           });
         }
       })
@@ -108,7 +103,7 @@ export default class CommentForm extends Component {
 
           <div className="form-group">
             <button disabled={this.state.loading} className="btn btn-primary">
-              Comment &#10148;
+              ارسال نظر &#10148;
             </button>
           </div>
         </form>

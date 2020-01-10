@@ -33,6 +33,8 @@ export default function CommentList(props) {
                   addReply={props.addReply}
                   onDelete={props.deleteComment}
                   poll={props.poll}
+                  user={props.user}
+                  isCreator={props.isCreator}
                 />);
       })}
     </div>

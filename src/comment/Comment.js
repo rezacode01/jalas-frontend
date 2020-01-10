@@ -102,8 +102,10 @@ export default class Comment extends Component {
   }
 
   render() {
-    let comment = this.state.comment;
     const { user, message, date } = this.state.comment;
+    const visitor = this.props.user
+    let comment = this.state.comment
+    console.log(visitor, user, this.props.isCreator)
     return (
     
       <div className="row media px-3 mb-2">
@@ -119,7 +121,8 @@ export default class Comment extends Component {
           <div className="media-body p-2 rounded bg-light border" 
             style={{
               'color':'aqua',
-              'text-decoration': 'none',
+              'textDecoration':'none',
+              'backgroundColor':'blue',
             }}
           >
             <p>{comment.user.fullname}</p>
@@ -129,19 +132,21 @@ export default class Comment extends Component {
           </div>
         </a>}
          <div className="col-12">{message}</div> 
-         <div className="row">
-           <div className="float-left">
-              <button className="btn btn-default"
-                onClick={this.handleEdit}
-              >ویرایش</button>
-              <button className="btn btn-default"
-                onClick={() => this.props.onDelete(comment)}
-              >حذف</button>
-           </div>
-            <button className="btn btn-success float-right"
-            onClick={this.handleReply}
-            >پاسخ</button>  
-         </div> ‍
+         {(user.username === visitor || this.props.isCreator) &&
+          <div className="row">
+              <div className="float-left">
+                <button className="btn btn-default"
+                  onClick={this.handleEdit}
+                >ویرایش</button>
+                <button className="btn btn-default"
+                  onClick={() => this.props.onDelete(comment)}
+                >حذف</button>
+              </div>
+                  <button className="btn btn-success float-right"
+                  onClick={this.handleReply}>
+                  پاسخ
+                  </button>  
+            </div>}
          {this.state.isEditing &&
          <div>
           <textarea

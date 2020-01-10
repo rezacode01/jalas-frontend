@@ -10,8 +10,7 @@ export default class CommentSection extends Component {
     this.state = {
       comments: [],
       poll: this.props.poll,
-      loading: false,
-      newComment: null
+      loading: false
     };
     this.addComment = this.addComment.bind(this);
   }
@@ -74,6 +73,8 @@ export default class CommentSection extends Component {
               comments={comments}
               newComment={this.state.newComment}
               poll={this.state.poll}
+              user={this.props.user}
+              isCreator={this.props.isCreator}
             />
           </div>
           <div className="col-4  pt-3 border-right text-right">

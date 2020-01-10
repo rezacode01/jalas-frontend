@@ -162,8 +162,10 @@ export default class Vote extends React.Component {
                 <div className="card card-border"
                     style={{ marginUp: '3cm' }}
                     >
-                    <CommentSection poll={poll.id} >
-                        </CommentSection>
+                    <CommentSection poll={poll.id}
+                        user={this.props.confirm.user_name}
+                        isCreator={isOwn}
+                    />
                 </div>
             </div>
         );

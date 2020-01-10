@@ -71,11 +71,9 @@ export default class Comment extends Component {
         reply.children = []
         this.setState({
           isReplying: false,
-          replyText: "",
-          comment: {...this.state.comment,
-            children: [reply, ...this.state.comment.children]
-          }
+          replyText: ""
         })
+        this.props.addReply(reply);
       }
     }).catch(err => {
       console.log(err)
@@ -85,8 +83,7 @@ export default class Comment extends Component {
   handleSubmitEdit = () => {
     let comment = this.state.comment
     const data = {
-      "message": this.state.editText,
-      "replyTo": comment.replyTo.cid
+      "message": this.state.editText
     };
     const path = `meetings/${this.props.poll}/comments/${comment.cid}`
     RequestUtil.put(path, data).then(res => {
@@ -108,12 +105,29 @@ export default class Comment extends Component {
     let comment = this.state.comment;
     const { user, message, date } = this.state.comment;
     return (
+    
       <div className="row media px-3 mb-2">
         <div className="media-body p-1 col-12 shadow-sm rounded bg-light border">
+        <a id={comment.cid}>
           <div className="col-12">
             <small className="col-3 float-right text-muted">{date.toLocaleDateString()}</small>
             <h6 className="mt-0 mb-1 text-muted">{user.fullname}</h6>
-          </div>    
+          </div>
+        </a>
+        {comment.replyTo &&
+        <a href={"#" + comment.replyTo.cid } >
+          <div className="media-body p-2 rounded bg-light border" 
+            style={{
+              'color':'aqua',
+              'text-decoration': 'none',
+            }}
+          >
+            <p>{comment.user.fullname}</p>
+            {comment.replyTo.message.length > 50 ? 
+            comment.replyTo.message.substring(0, 50) : 
+            comment.replyTo.message}
+          </div>
+        </a>}
          <div className="col-12">{message}</div> 
          <div className="row">
            <div className="float-left">
@@ -157,13 +171,9 @@ export default class Comment extends Component {
             <button onClick={this.handleCancelReply}>لغو</button>
           </div>
          }
-         {comment.children.length > 0 &&
-          <CommentList comments={comment.children}
-                       poll={this.props.poll}   
-                           />
-         }
         </div>
       </div>
+    
     );
   }
 }

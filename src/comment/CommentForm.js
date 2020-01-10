@@ -52,12 +52,10 @@ export default class CommentForm extends Component {
       .then(res => {
         if (res.error) {
           this.setState({ loading: false, error: res.error });
-        } else {
+        } else if (res.status === 200) {
           console.log(res)
           res.data.date = new Date();
-          res.data.children = [];
           this.props.addComment(res.data);
-
           this.setState({
             loading: false,
             comment: { message: "" }

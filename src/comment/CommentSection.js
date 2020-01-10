@@ -25,9 +25,8 @@ export default class CommentSection extends Component {
     RequestUtil.get(`meetings/${this.state.poll}/comments`)
     .then(res => {
       let comments = res.data.list
-      let unflattenedComments = this.unflattenComments(comments)
       this.setState({
-        comments: unflattenedComments,
+        comments: comments,
         loading: false
       });
     })
@@ -37,33 +36,25 @@ export default class CommentSection extends Component {
     });
   }
 
-  unflattenComments(arr) {
-    var tree = [],
-        mappedArr = {},
-        arrElem,
-        mappedElem;
-    for(var i = 0, len = arr.length; i < len; i++) {
-      arrElem = arr[i];
-      mappedArr[arrElem.cid] = arrElem;
-      mappedArr[arrElem.cid]['children'] = [];
-    }
-    console.log(mappedArr)
-    for (var id in mappedArr) {
-      mappedElem = mappedArr[id];
-      if (mappedElem.replyTo) {
-        console.log("ok")
-        mappedArr[mappedElem['replyTo'].cid]['children'].push(mappedElem);
-      } else {
-        tree.push(mappedElem);
-      }
-    }
-    return tree;
-  } 
-
   addComment(comment) {
     this.setState({
-      newComment: comment
+      comments: [comment, ...this.state.comments]
     })
+  }
+
+  deleteComment = (comment) => {
+    const path = `meetings/${this.state.poll}/comments/${comment.cid}`
+    RequestUtil.delete(path, null).then(res => {
+      if (res.status === 200) {
+        let comments = this.state.comments.slice()
+        comments = comments.filter(function( obj ) {
+          return obj.cid !== comment.cid;
+        })
+        this.fetchComments()
+      }
+    }).catch(err => {
+      console.log(err)
+    });
   }
 
   render() {
@@ -77,6 +68,8 @@ export default class CommentSection extends Component {
 
           <div className="col-8  pt-3 bg-white text-right">
             <CommentList
+              deleteComment={this.deleteComment}
+              addReply={this.addComment}
               loading={this.state.loading}
               comments={comments}
               newComment={this.state.newComment}

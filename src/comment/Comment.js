@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import CommentList from "./CommentList";
+import RequestUtil from "../common/Util";
 
 
 export default class Comment extends Component {
@@ -46,18 +47,33 @@ export default class Comment extends Component {
   }
 
   handleSubmitReply = () => {
-    this.setState({
-      isReplying: false,
-      replyText: ""
-    })
-  }
-
-  handleDelete = () => {
-
+    let comment = this.state.comment
+    const data = {
+      "message": this.state.replyText,
+      "replyTo": comment.cid
+    };
+    const path = `meetings/${this.props.poll}/comments/`
+    RequestUtil.postJson(path, data).then(res => {
+      if (res.status === 200) {
+        let reply = res.data;
+        console.log(reply)
+        reply.date = new Date()
+        reply.children = []
+        this.setState({
+          isReplying: false,
+          replyText: "",
+          comment: {...this.state.comment,
+            children: [reply, ...this.state.comment.children]
+          }
+        })
+      }
+    }).catch(err => {
+      console.log(err)
+    });
   }
 
   render() {
-    let comment = this.state.comment
+    let comment = this.state.comment;
     const { user, message, date } = this.state.comment;
     return (
       <div className="row media px-3 mb-2">
@@ -73,7 +89,7 @@ export default class Comment extends Component {
                 onClick={this.handleEdit}
               >ویرایش</button>
               <button className="btn btn-default"
-                onClick={this.handleDelete}
+                onClick={() => this.props.onDelete(comment)}
               >حذف</button>
            </div>
          <button className="btn btn-success float-right"
@@ -96,7 +112,9 @@ export default class Comment extends Component {
           </div>
          }
          {comment.children.length > 0 &&
-          <CommentList comments={comment.children} />
+          <CommentList comments={comment.children}
+                       poll={this.props.poll}   
+                           />
          }
         </div>
       </div>

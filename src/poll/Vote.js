@@ -35,7 +35,7 @@ export default class Vote extends React.Component {
                     });
                 }
             }).catch(err => {
-                if (err.response.status === 403) {
+                if (err.response && err.response.status === 403) {
                     this.props.history.replace('/401')
                 }
                 console.log(err);

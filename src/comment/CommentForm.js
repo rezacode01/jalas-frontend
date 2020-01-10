@@ -44,7 +44,7 @@ export default class CommentForm extends Component {
     
     this.setState({ error: "", loading: true });
     const data = {
-        "message": JSON.stringify(comment.message),
+        "message": comment.message,
 	      "replyTo": null
     } 
     
@@ -55,6 +55,7 @@ export default class CommentForm extends Component {
         } else {
           console.log(res)
           res.data.date = new Date();
+          res.data.children = [];
           this.props.addComment(res.data);
 
           this.setState({

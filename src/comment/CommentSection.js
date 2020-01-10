@@ -26,9 +26,6 @@ export default class CommentSection extends Component {
     RequestUtil.get(`meetings/${this.state.poll}/comments`)
     .then(res => {
       let comments = res.data.list
-      comments.forEach(comment => {
-        comment.date = new Date(comment.date)
-      });
       let unflattenedComments = this.unflattenComments(comments)
       this.setState({
         comments: unflattenedComments,
@@ -51,9 +48,11 @@ export default class CommentSection extends Component {
       mappedArr[arrElem.cid] = arrElem;
       mappedArr[arrElem.cid]['children'] = [];
     }
+    console.log(mappedArr)
     for (var id in mappedArr) {
       mappedElem = mappedArr[id];
       if (mappedElem.replyTo) {
+        console.log("ok")
         mappedArr[mappedElem['replyTo'].cid]['children'].push(mappedElem);
       } else {
         tree.push(mappedElem);
@@ -63,7 +62,6 @@ export default class CommentSection extends Component {
   } 
 
   addComment(comment) {
-    console.log(comment)
     this.setState({
       loading: false,
       comments: [comment, ...this.state.comments]
@@ -72,10 +70,9 @@ export default class CommentSection extends Component {
 
   render() {
     if (this.state.loading) return "صبرکنید"
+
     let comments = this.state.comments
-    comments.sort((a, b) => {
-      return b.date - a.date
-    })
+    console.log(comments)
     return (
       <div className="container bg-light shadow">
         <div className="row">
@@ -84,6 +81,7 @@ export default class CommentSection extends Component {
             <CommentList
               loading={this.state.loading}
               comments={comments}
+              poll={this.state.poll}
             />
           </div>
           <div className="col-4  pt-3 border-right text-right">

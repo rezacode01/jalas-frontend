@@ -38,8 +38,11 @@ const RequestUtil = createReactClass({
       if (Auth.loggedIn()) {
         headers["Authorization"] = "Bearer " +  Auth.getToken();
       };
+      return axios.delete(url, {headers, data})
       return axios.options({
         method: 'delete',
+        withCredentials: true,
+        crossDomain: true,
         url: base + url,
         headers: headers,
         data: data
@@ -47,16 +50,21 @@ const RequestUtil = createReactClass({
     },
     put: function(url, data) {
       let Auth =  new AuthUtil();
-      
       const headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       }
       if (Auth.loggedIn()) {
         headers["Authorization"] = "Bearer " +  Auth.getToken();
       };
-      return API.post(url, querystring.stringify(data), { 
-          headers
-      });
+      const options = {
+        method: 'put',
+        withCredentials: true,
+        crossDomain: true,
+        headers: headers,
+        data: data,
+        url: base + url
+      };
+      return axios(options)
     },
     post: function(url, data) {
       

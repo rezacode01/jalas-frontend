@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Comment from "./Comment";
-import { render } from "react-dom";
 import RequestUtil from "../common/Util";
 
 
@@ -14,23 +13,34 @@ export default class CommentList extends Component {
     }
   }
 
+  componentWillReceiveProps(props) {
+
+    const { comments } = props;
+      this.setState({
+        comments: comments
+      })
+  }
+
   deleteComment = (comment) => {
-    const data = null;
-    const path = `meetings/${this.state.poll}/comments/${this.comment.cid}`
+    console.log(comment)
+    const data = {
+      message: comment.message,
+      replyTo: comment.replyTo ? comment.replyTo.cid : ""
+    };
+    const path = `meetings/${this.state.poll}/comments/${comment.cid}`
     RequestUtil.delete(path, data).then(res => {
       console.log(res)
       if (res.status === 200) {
-        console.log(res)
+        let comments = this.state.comments.slice()
+        comments = comments.filter(function( obj ) {
+          return obj.cid !== comment.cid;
+        })
         this.setState({
-          comments: ""
+          comments: comments
         });
       }
     }).catch(err => {
-        console.log(err)
-      this.setState({
-        error: "خطایی رخ داد",
-        loading: false
-      });
+      console.log(err)
     });
   }
   
@@ -42,10 +52,14 @@ export default class CommentList extends Component {
   }
 
   render() { 
-    const comments = this.state.comments.sort((a, b) => {
+    let comments = this.state.comments;
+    
+    comments.forEach(comment => {
+      return comment.date = new Date(comment.date)
+    })
+    comments = this.state.comments.sort((a, b) => {
       return a.date > b.date
     })
-
     if (comments.length === 0) return null;  
 
     return (
@@ -62,7 +76,12 @@ export default class CommentList extends Component {
         ) : null}
 
         {comments.map((comment) => {
-          return (<Comment key={comment.cid} comment={comment} />);
+          return (<Comment
+                    key={comment.cid} 
+                    comment={comment}
+                    onDelete={this.deleteComment}
+                    poll={this.props.poll}
+                     />);
         })}
       </div>
     );

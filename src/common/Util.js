@@ -27,26 +27,24 @@ const RequestUtil = createReactClass({
         url: base + url
       };
       return axios(options)
-    }, 
+    },
     delete: function(url, data) {
-          
       let Auth =  new AuthUtil();
-      
       const headers = {
         'Content-Type': 'application/json'
       }
       if (Auth.loggedIn()) {
         headers["Authorization"] = "Bearer " +  Auth.getToken();
       };
-      return axios.delete(url, {headers, data})
-      return axios.options({
-        method: 'delete',
-        withCredentials: true,
-        crossDomain: true,
-        url: base + url,
-        headers: headers,
-        data: data
-      })
+      return axios.delete(base + url, {headers, data})
+      // return axios.options({
+      //   method: 'delete',
+      //   withCredentials: true,
+      //   crossDomain: true,
+      //   url: base + url,
+      //   headers: headers,
+      //   data: data
+      // })
     },
     put: function(url, data) {
       let Auth =  new AuthUtil();

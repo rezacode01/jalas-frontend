@@ -16,6 +16,9 @@ export default class Comment extends Component {
   }
 
   handleEditChange = (e) => {
+    this.setState({
+      editText: e.target.value
+    })
   }
 
   handleReplyChange = (e) => {
@@ -28,7 +31,8 @@ export default class Comment extends Component {
     e.preventDefault()
     this.setState({
       isEditing: true,
-      isReplying: false
+      isReplying: false,
+      editText: this.state.comment.message
     })
   }
 
@@ -43,6 +47,12 @@ export default class Comment extends Component {
   handleCancelReply = () => {
     this.setState({
       isReplying: false
+    })
+  }
+
+  handleCancelEdit = () => {
+    this.setState({
+      isEditing: false
     })
   }
 
@@ -72,6 +82,28 @@ export default class Comment extends Component {
     });
   }
 
+  handleSubmitEdit = () => {
+    let comment = this.state.comment
+    const data = {
+      "message": this.state.editText,
+      "replyTo": comment.replyTo.cid
+    };
+    const path = `meetings/${this.props.poll}/comments/${comment.cid}`
+    RequestUtil.put(path, data).then(res => {
+      if (res.status === 200) {
+        this.setState({
+          isEditing: false,
+          editText: "",
+          comment: {...comment,
+            message: this.state.editText
+          }
+        })
+      }
+    }).catch(err => {
+      console.log(err)
+    });
+  }
+
   render() {
     let comment = this.state.comment;
     const { user, message, date } = this.state.comment;
@@ -92,10 +124,24 @@ export default class Comment extends Component {
                 onClick={() => this.props.onDelete(comment)}
               >حذف</button>
            </div>
-         <button className="btn btn-success float-right"
-          onClick={this.handleReply}
-          >پاسخ</button>  
+            <button className="btn btn-success float-right"
+            onClick={this.handleReply}
+            >پاسخ</button>  
          </div> ‍
+         {this.state.isEditing &&
+         <div>
+          <textarea
+              onChange={this.handleEditChange}
+              value={this.state.editText}
+              className="form-control text-right col-12"
+              style={{'direction': 'rtl'}}
+              name="message"
+              rows="5"
+            />
+            <button onClick={this.handleSubmitEdit}>ویرایش</button>
+            <button onClick={this.handleCancelEdit}>لغو</button>
+          </div>
+         }
          {this.state.isReplying &&
          <div>
           <textarea
@@ -103,7 +149,7 @@ export default class Comment extends Component {
               value={this.state.reply}
               className="form-control text-right col-12"
               style={{'direction': 'rtl'}}
-              placeholder="نظر شما"
+              placeholder="پاسخ شما"
               name="message"
               rows="5"
             />

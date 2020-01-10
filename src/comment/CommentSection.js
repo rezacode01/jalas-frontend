@@ -7,13 +7,12 @@ import RequestUtil from "../common/Util";
 export default class CommentSection extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       comments: [],
       poll: this.props.poll,
-      loading: false
+      loading: false,
+      newComment: null
     };
-
     this.addComment = this.addComment.bind(this);
   }
 
@@ -63,9 +62,8 @@ export default class CommentSection extends Component {
 
   addComment(comment) {
     this.setState({
-      loading: false,
-      comments: [comment, ...this.state.comments]
-    });
+      newComment: comment
+    })
   }
 
   render() {
@@ -81,6 +79,7 @@ export default class CommentSection extends Component {
             <CommentList
               loading={this.state.loading}
               comments={comments}
+              newComment={this.state.newComment}
               poll={this.state.poll}
             />
           </div>

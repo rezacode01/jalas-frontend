@@ -5,28 +5,24 @@ import RequestUtil from "../common/Util";
 
 export default class CommentList extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      comments: props.comments,
-      poll: props.poll
-    }
+  state = {
+      comments: this.props.comments,
+      poll: this.props.poll
   }
 
-  componentWillReceiveProps(props) {
-
-    const { comments } = props;
-      this.setState({
-        comments: comments
-      })
+  static getDerivedStateFromProps(props, state) {
+    console.log(props)
+    console.log(state)
+    if (props.newComment === state.prevSate.newComment) return null;
+    console.log("okay")
+    return {...state, 
+      comments: props.comments
+    }
   }
 
   deleteComment = (comment) => {
     console.log(comment)
-    const data = {
-      message: comment.message,
-      replyTo: comment.replyTo ? comment.replyTo.cid : ""
-    };
+    const data = null
     const path = `meetings/${this.state.poll}/comments/${comment.cid}`
     RequestUtil.delete(path, data).then(res => {
       console.log(res)
@@ -44,13 +40,6 @@ export default class CommentList extends Component {
     });
   }
   
-  addComment = (comment) => {
-    this.setState({
-      loading: false,
-      comments: [comment, ...this.state.comments]
-    });
-  }
-
   render() { 
     let comments = this.state.comments;
     

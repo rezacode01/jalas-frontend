@@ -132,8 +132,8 @@ export default class Comment extends Component {
           </div>
         </a>}
          <div className="col-12">{message}</div> 
-         {(user.username === visitor || this.props.isCreator) &&
           <div className="row">
+         {(user.username === visitor || this.props.isCreator) &&
               <div className="float-left">
                 <button className="btn btn-default"
                   onClick={this.handleEdit}
@@ -142,6 +142,7 @@ export default class Comment extends Component {
                   onClick={() => this.props.onDelete(comment)}
                 >حذف</button>
               </div>
+         }
                   <button className="btn btn-success float-right"
                   onClick={this.handleReply}>
                   پاسخ

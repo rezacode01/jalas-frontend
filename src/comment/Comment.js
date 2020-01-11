@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import RequestUtil from "../common/Util";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default class Comment extends Component {
@@ -13,6 +15,9 @@ export default class Comment extends Component {
       isReplying: false
     }
   }
+
+  notifyError = (message) => toast.error(message, 
+    {position: toast.POSITION.BOTTOM_CENTER});
 
   handleEditChange = (e) => {
     this.setState({
@@ -56,6 +61,10 @@ export default class Comment extends Component {
   }
 
   handleSubmitReply = () => {
+    if (!this.state.replyText.length) {
+      this.notifyError("پیام خالی است")
+      return
+    }
     let comment = this.state.comment
     const data = {
       "message": this.state.replyText,
@@ -75,6 +84,9 @@ export default class Comment extends Component {
       }
     }).catch(err => {
       console.log(err)
+      if (err.response.status === 500) {
+        this.notifyError("پیام بیش از حد طولانی است")
+      }
     });
   }
 
@@ -114,6 +126,7 @@ export default class Comment extends Component {
             <h6 className="mt-0 mb-1 text-muted">{user.fullname}</h6>
           </div>
         </a>
+        <ToastContainer />
         {comment.replyTo &&
         <a href={"#" + comment.replyTo.cid } >
           <div className="media-body p-2 mb-2 rounded bg-white border" 

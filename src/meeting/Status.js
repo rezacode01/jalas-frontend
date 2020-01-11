@@ -4,22 +4,6 @@ import RequestUtil from '../common/Util';
 export default class Status extends React.Component {
   constructor(props) {
     super(props);
-    this.handleCancel = this.handleCancel.bind(this)
-  }
-
-  handleCancel(e) {
-    e.preventDefault()
-    const path = `/meetings/${this.props.meeting.id}`;
-    RequestUtil.post(path + '/status', {status: 'CANCELLED'})
-      .then(res => {
-        console.log(res);
-        if (res.status === 200) {
-          console.log("Cancelled successfully")
-        }
-      }).catch(error => {
-          console.log(error);
-      });
-    this.props.onChangeStage('cancelAttempt');
   }
 
   render() {
@@ -43,7 +27,7 @@ export default class Status extends React.Component {
         </table>
         {(this.props.user === meeting.creator.username && meeting.state !== "CANCELLED") &&
           <button className="btn btn-danger btn-sm btn-block col-3 mb-3" 
-                            onClick={this.handleCancel}>
+                            onClick={this.props.handleCancel}>
                             لغو</button>
         }
       </div>

@@ -64,6 +64,13 @@ export default class CommentForm extends Component {
       })
       .catch(err => {
           console.log(err)
+        if (err.response.status === 500) {
+          this.setState({
+            error: "پیام بیش از حد طولانی است",
+            loading: false
+          })
+          return
+        }
         this.setState({
           error: "خطایی رخ داد",
           loading: false

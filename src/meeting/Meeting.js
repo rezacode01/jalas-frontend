@@ -11,6 +11,7 @@ export default class Meeting extends React.Component {
             meeting: null,
             stage: null
         }
+        this.handleCancel = this.handleCancel.bind(this)
     }
 
     componentDidMount() {
@@ -33,12 +34,26 @@ export default class Meeting extends React.Component {
                     });
                 }
             }).catch(err => {
-                if (err.response.status === 403) {
+                if (err.response && err.response.status === 403) {
                     this.props.history.replace('/401')
                 }
                 console.log(err);
             });
     }
+    
+  handleCancel(e) {
+    e.preventDefault()
+    const path = `/meetings/${this.state.meeting.id}`;
+    RequestUtil.post(path + '/status', {status: 'CANCELLED'})
+      .then(res => {
+        console.log(res);
+        if (res.status === 200) {
+            this.fetchMeeting()
+        }
+      }).catch(error => {
+          console.log(error);
+      });
+  }
 
     render() {
         const meeting = this.state.meeting;
@@ -47,7 +62,7 @@ export default class Meeting extends React.Component {
         }
         console.log(meeting.state)
         
-        let display = <div></div>
+        let display = null
         if (meeting.state === "TIME_SUBMITTED") {
             display = <RoomSelection 
                         meeting={meeting} 
@@ -65,6 +80,7 @@ export default class Meeting extends React.Component {
                 <Status 
                     meeting={meeting} 
                     onChangeStage={this.changeStage}
+                    handleCancel={this.handleCancel}
                     user={this.props.confirm.user_name} />
                 {this.props.confirm.user_name === meeting.creator.username &&
                 <div className="container"> {display} </div>

@@ -31,17 +31,6 @@ export default class Status extends React.Component {
 
     return (
       <div>
-        {meeting.state === "ROOM_SUBMITTED" &&
-          <div>
-            <h1>درخواست رزرو شما ثبت شده است</h1>
-            <button onClick={this.handleCancel}>لغو درخواست</button>
-          </div>
-        }
-        {this.props.user === meeting.creator.username &&
-          <button className="btn btn-danger btn-sm btn-block" 
-                            onClick={this.endPoll}>
-                            لغو</button>
-        }
         <table className="table table-striped table-dark">
           <tbody>
             <tr>
@@ -52,6 +41,11 @@ export default class Status extends React.Component {
             </tr>
           </tbody>
         </table>
+        {(this.props.user === meeting.creator.username && meeting.state !== "CANCELLED") &&
+          <button className="btn btn-danger btn-sm btn-block col-3 mb-3" 
+                            onClick={this.handleCancel}>
+                            لغو</button>
+        }
       </div>
     );
   }

@@ -32,8 +32,8 @@ export default class Home extends React.Component {
 
     separate(all) {
         this.setState({...this.state,
-            meetings: all.filter(m => m.state !== "POLL" && m.state !== "POLL_CLOSED"),
-            polls: all.filter(m => m.state === "POLL" || m.state === "POLL_CLOSED")
+            meetings: all.filter(m => m.state !== "POLL" && m.state !== "PENDING"),
+            polls: all.filter(m => m.state === "POLL" || m.state === "PENDING")
         })
     }
 
@@ -96,11 +96,12 @@ function MeetingList(props) {
         <div>
             <h2>رای‌گیری‌ها</h2>
             <ul className="list-group">
-                { meetings.map(meeting => { return <PollItem key={meeting.id} 
-                                                                poll={meeting} onSelect={1} 
-                                                                isOwn={props.user === meeting.creator.username}
-                                                                /> 
-                                                                })}
+                { meetings.map(meeting => 
+                { return <PollItem key={meeting.id} 
+                                        poll={meeting} onSelect={1} 
+                                        isOwn={props.user === meeting.creator.username}
+                                        /> 
+                                        })}
             </ul>
         </div>
     );
@@ -116,7 +117,9 @@ function MeetingList(props) {
                 <h5 className="card-title">{meeting.title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{meeting.creator.username}</h6>
                 <a className="btn btn-dark stretched-link" href={`meetings/${meeting.id}`}>وضعیت</a>
-                {meeting.state === "RESERVED" && <h6><span className="badge badge-default">رزروشده</span></h6>}
+                {meeting.state === "RESERVED" ? <h6><span className="badge badge-success">رزروشده</span></h6> : (
+                    meeting.state === "CANCELLED" && <span className="badge badge-warning">لغوشده</span>)
+                }
             </div>
           </div>
       </li>
@@ -131,9 +134,11 @@ function MeetingList(props) {
             <div className="card-body">
                 <h5 className="card-title">{poll.title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{poll.creator.username}</h6>
+                {poll.state !== "POLL" &&
+                <span className="badge badge-warning">بسته شده</span>}
                 <a className="btn btn-primary stretched-link" href={`polls/${poll.id}`}>
-                {props.isOwn ? "جلسه شما" : "شرکت‌کننده"}
-                </a>
+                {props.isOwn ? "جلسه شما" : "شرکت‌کننده"}</a>
+                
             </div>
           </div>
       </li>

@@ -145,6 +145,8 @@ export default class PollCreation extends React.Component {
         const poll = this.state.poll
         console.log(poll)
         if (!poll) return "صبر کنید"
+        if (poll.state != "POLL")
+            this.props.history.replace('/401')
         let participants = this.state.poll.participants.map((p, index) =>
             <ParticipantItem 
                 isCreator={p.username === poll.creator.username}
@@ -229,10 +231,11 @@ function ParticipantItem(props) {
     return (
         <li key={props.index} className="list-group-item" >
             <div className="row">
-                <p className="col-5">{props.username}</p>
+                <p className="col-auto">{props.username}</p>
                 {props.isCreator ? <span className="badge badge-success">شما</span> :
-                <button className="btn btn-danger btn-sm"
-                onClick={() => props.onRemoveParticipant(props.username)}>-</button>
+                <button className="btn btn-danger col-auto"
+                    onClick={() => props.onRemoveParticipant(props.username)}>
+                    -</button>
                 }
             </div>
         </li>

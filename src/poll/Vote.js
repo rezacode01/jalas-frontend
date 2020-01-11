@@ -44,12 +44,12 @@ export default class PollEdit extends React.Component {
     }
 
     arrangeMeeting = () => {
-        this.props.history.push(`/polls/${this.state.poll.id}`);
+        this.props.history.push(`/meetings/${this.state.poll.id}`);
     }
 
     endPoll = () => {
         const pollID = this.state.poll.id;
-        const params =`status=POLL_CLOSED`
+        const params =`status=PENDING`
         RequestUtil.post(`/meetings/${pollID}/status?${params}`)
             .then(res => {
                 if (res.status === 200) {
@@ -63,7 +63,9 @@ export default class PollEdit extends React.Component {
     handleVote = (id, vote, e) => {
         e.preventDefault();
         const data = {
-            vote: vote === 2 ? "DISAGREE" : "AGREE"
+            vote: vote===1 ? "AGREE" : 
+                vote ===2 ? "DISAGREE" : 
+                "SO_SO"
         }
         const path = `meetings/${this.state.poll.id}/slots/${id}/vote`;
         RequestUtil.postJson(path, data).then(res => {
@@ -96,13 +98,13 @@ export default class PollEdit extends React.Component {
                     <table className="table table-striped">
                     <tbody>
                         <tr>
-                            <th>شروع</th><th>اتمام</th><th>موافق</th><th>مخالف</th><th>رای</th>
+                            <th>شروع</th><th>اتمام</th><th>موافق</th><th>بینظر</th><th>مخالف</th><th>رای</th>
                         </tr>
                         { poll.slots.map(slot => <SlotItem 
                                                     key={slot.id} 
                                                     slot={slot} 
                                                     onVote={this.handleVote}
-                                                    closed={poll.state === "POLL_CLOSED"} /> 
+                                                    closed={poll.state === "PENDING"} /> 
                                                     )}
                     </tbody>
                     </table>
@@ -118,11 +120,17 @@ export default class PollEdit extends React.Component {
                             onClick={this.endPoll}>
                             اتمام رای‌گیری</button>
                     }
-                    {(isOwn && poll.state === "POLL_CLOSED") &&
+                    {(isOwn && poll.state === "PENDING") &&
                         <button className="btn btn-primary btn-lg btn-block" 
                             onClick={this.arrangeMeeting}>
                             ایجاد جلسه مربوطه</button>}
                 </div>
+                
+                {poll.state !== "POLL" ? (
+                    <div className="alert text-center alert-warning">
+                    رای‌گیری تمام‌شده است
+                    </div>
+                ) : null}
                 <div className="card card-border"
                     style={{ marginUp: '3cm' }}
                     >
@@ -140,9 +148,9 @@ function SlotItem(props) {
     let slot = props.slot;
     return (
         <tr>
-            <td>{Date(slot.from).toString()}</td>
-            <td>{Date(slot.to).toString()}</td>
-            <td>{slot.agreeCount}</td><td>{slot.disAgreeCount}</td>
+            <td>{slot.from}</td>
+            <td>{slot.to}</td>
+            <td>{slot.agreeCount}</td><td>{slot.soSoCount}</td><td>{slot.disAgreeCount}</td>
             <td>
                 {!props.closed &&
                 <div className="btn-group btn-group-toggle btn-group-sm">

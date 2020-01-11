@@ -26,6 +26,7 @@ class App extends Component {
                 <Route exact path="/polls/new" component={withAuth(PollCreation)} />
                 <Route exact path="/polls/:pollID/edit" component={withAuth(PollEdit)} />
                 <Route exact path="/polls/:pollID" component={withAuth(Vote)} />
+                <Route exact path="/401" component={ErrorPage} />
                 <Route exact path="*" component={ErrorPage} />
             </Switch>
           </div>

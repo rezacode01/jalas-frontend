@@ -8,11 +8,11 @@ import DateTimePicker from 'react-datetime-picker';
 export default class PollCreation extends React.Component {
     constructor(props) {
         super(props);
-        const date = new Date(new Date().getTime() + 24*1000*3600)
+        const date = new Date(new Date().getTime() + 1000*3600)
         this.state = {
             poll: null,
             newperson: "",
-            newSlot: {from: new Date(), to: new Date()},
+            newSlot: {from: new Date(), to: date},
             error: "",
             username: this.props.confirm.user_name
         }
@@ -122,6 +122,10 @@ export default class PollCreation extends React.Component {
     }
 
     removeSlot = (slot) => {
+        if (this.state.poll.slots.length < 2) {
+            this.notifyError("باید حداقل یک بازه وجود داشته باشد")
+            return
+        }
         const path = `meetings/${this.state.poll.id}/slots/${slot.id}`
         RequestUtil.delete(path, null).then(res => {
           if (res.status === 200) {
@@ -192,7 +196,6 @@ export default class PollCreation extends React.Component {
                                     onChange={(date) => this.handleChangeSlot(false, date)}
                                     value={this.state.newSlot.to}
                                     />
-                                
                                 </div>
                             </div>
                         <div className="text-center">

@@ -2,17 +2,22 @@ import React from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RequestUtil from '../common/Util';
-import SlotAddItem from './SlotAddItem'
+import SlotAddItem from './SlotAddItem';
+import DateTimePicker from 'react-datetime-picker';
 
 export default class PollCreation extends React.Component {
     constructor(props) {
         super(props);
         const date = new Date(new Date().getTime() + 24*1000*3600)
+        const tomorrow = new Date()
+        tomorrow.setDate(new Date().getDate() + 1)
+        const slot = {from: date, to: new Date(date.getTime() + 1000*3600)};
         this.state = {
             participants: [],
-            slots: [{from: date, to: new Date(date.getTime() + 1000*3600)}],
+            slots: [slot],
             title: "جلسان",
             pending: false,
+            deadline: tomorrow
         }
     }
 
@@ -20,12 +25,22 @@ export default class PollCreation extends React.Component {
         document.title = "رای‌گیری جدید";
     }
 
-    makePoll = () => {
-        const participants = this.state.participants.filter(p => p !== "")
+    validatePoll() {
+        let {deadline, participants} = this.state
+        participants = participants.filter(p => p !== "")
         if (!this.state.title.length || !participants.length || !this.state.slots) {
             this.notifyError("ورودی‌ها نباید خالی باشند")
-            return;
+            return false;
+        } else if (deadline < Date.now() + 600000) {
+            this.notifyError("مهلت باید پس در آینده باشد")
+            return false
         }
+        return true
+    }
+    makePoll = () => {
+        if (!this.validatePoll())
+            return
+        
         this.setState({pending: true})
         const data =  {
             title: this.state.title,
@@ -36,6 +51,7 @@ export default class PollCreation extends React.Component {
                     to: slot.to.getTime()/1000
                 }
             }),
+            deadline: this.state.deadline.getTime()/1000
         }
         const path = `meetings`
         RequestUtil.postJson(path, data).then(res => {
@@ -95,6 +111,12 @@ export default class PollCreation extends React.Component {
         })
     }
 
+    changeDeadline = (from, date) => {
+        this.setState({...this.state,
+            deadline: date
+        })
+    }
+
     changeSlot = (index, from, date) => {
         const newPs = this.state.slots.slice()
         if (from) newPs[index].from = date
@@ -148,6 +170,14 @@ export default class PollCreation extends React.Component {
                     </div>
                 </div>
                 <div className="card text-center mb-3">
+                    <div className="card-header">مهلت</div>
+                    <div className="card-body  bg-light">                       
+                        <Deadline deadline={this.state.deadline}
+                            onChange={this.changeDeadline}
+                        />
+                    </div>
+                </div>
+                <div className="card text-center mb-3">
                     <div className="card-header">شرکت‌کنندگان</div>
                     <div className="card-body  bg-dark">
                         <button className="btn btn-sm btn-primary"
@@ -187,3 +217,14 @@ function ParticipantItem(props) {
         </li>
     )
 } 
+
+function Deadline(props) {
+    return (
+    <div>
+        <DateTimePicker
+            onChange={(date) => props.onChange(true, date)}
+            value={props.deadline}
+            />
+    </div>
+    )
+}

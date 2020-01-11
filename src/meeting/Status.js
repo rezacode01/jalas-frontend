@@ -37,6 +37,11 @@ export default class Status extends React.Component {
             <button onClick={this.handleCancel}>لغو درخواست</button>
           </div>
         }
+        {this.props.user === meeting.creator.username &&
+          <button className="btn btn-danger btn-sm btn-block" 
+                            onClick={this.endPoll}>
+                            لغو</button>
+        }
         <table className="table table-striped table-dark">
           <tbody>
             <tr>

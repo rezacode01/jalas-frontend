@@ -64,8 +64,11 @@ export default class Meeting extends React.Component {
                 <h1 className="text-right">{meeting.title}</h1>
                 <Status 
                     meeting={meeting} 
-                    onChangeStage={this.changeStage} />
+                    onChangeStage={this.changeStage}
+                    user={this.props.confirm.user_name} />
+                {this.props.confirm.user_name === meeting.creator.username &&
                 <div className="container"> {display} </div>
+                }
             </div>
         );
     }

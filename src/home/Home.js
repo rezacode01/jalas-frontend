@@ -32,8 +32,8 @@ export default class Home extends React.Component {
 
     separate(all) {
         this.setState({...this.state,
-            meetings: all.filter(all => all.state !== "PENDING"),
-            polls: all.filter(all => all.state === "PENDING")
+            meetings: all.filter(m => m.state !== "POLL" && m.state !== "POLL_CLOSED"),
+            polls: all.filter(m => m.state === "POLL" || m.state === "POLL_CLOSED")
         })
     }
 

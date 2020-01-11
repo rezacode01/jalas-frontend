@@ -76,9 +76,8 @@ export default class PollCreation extends React.Component {
         })
     }
 
-    handleSubmitSlot = (e) => {
-        e.preventDefault()
-        const s = this.state.slot;
+    handleSubmitSlot = () => {
+        const s = this.state.newSlot;
         this.setState({pending: true})
         const path = `meetings/${this.state.poll.id}/slots/`
         RequestUtil.postJson(path, {
@@ -113,13 +112,15 @@ export default class PollCreation extends React.Component {
         })
     }
 
-    removeSlot = (index, e) => {
-        e.preventDefault()
-        let newPs = this.state.slots.slice()
-        newPs.splice(index, 1)
-        this.setState({...this.state,
-            slots: newPs
-        })
+    removeSlot = (slot) => {
+        const path = `meetings/${this.state.poll.id}/slots/${slot.id}`
+        RequestUtil.delete(path, null).then(res => {
+          if (res.status === 200) {
+              this.fetchPoll()
+          }
+        }).catch(err => {
+          console.log(err)
+        });
     }
 
     changeSlot = (index, from, date) => {
@@ -131,14 +132,8 @@ export default class PollCreation extends React.Component {
         })
     }
 
-    makeNewSlot = () => {
-        const date = new Date()
-        this.setState({...this.state,
-            slots: [...this.state.slots, {
-                from: date, 
-                to: new Date(date.getTime() + 1000*3600)
-            }]
-        });
+    return = () => {
+        this.props.history.push(`/polls/${this.state.poll.id}`)
     }
 
     render() {
@@ -153,7 +148,7 @@ export default class PollCreation extends React.Component {
         //         onRemoveParticipant = {this.removeParticipant}
         //         />
         //     )
-        
+        console.log(poll.slots)
         let slots = this.state.poll.slots.map((s, index) =>
             <SlotItem 
                 key={index}
@@ -182,8 +177,7 @@ export default class PollCreation extends React.Component {
                         <button className="btn btn-sm btn-primary" 
                             onClick={this.handleSubmitSlot}>ثبت زمان </button>
                             <div>
-                                <div>
-                                from
+                                <div>from
                                 <DateTimePicker
                                     onChange={(date) => this.handleChangeSlot(true, date)}
                                     value={this.state.newSlot.from}
@@ -193,6 +187,7 @@ export default class PollCreation extends React.Component {
                                     onChange={(date) => this.handleChangeSlot(false, date)}
                                     value={this.state.newSlot.to}
                                     />
+                                
                                 </div>
                             </div>
                         <div className="text-center">
@@ -202,8 +197,7 @@ export default class PollCreation extends React.Component {
                         </div>
                     </div>
                 </div>
-                <button className={`btn btn-primary btn-block`} onClick={this.makePoll}>
-                    <span className={this.state.pending && "spinner-border spinner-border-sm"}></span>
+                <button className={`btn btn-primary btn-block`} onClick={this.return}>
                     بازگشت</button>
             </div>
         )
@@ -219,7 +213,7 @@ function SlotItem(props) {
           <span className="col-4">{slot.from}</span>
           <span className="col-4">{slot.to}</span>
           <td><button className="badge badge-danger badge-pill"
-            onClick={(e) => props.onSelect(slot.id, e)}>حذف</button></td>
+            onClick={() => props.onRemoveSlot(slot)}>حذف</button></td>
             </div>
         </li>
     );

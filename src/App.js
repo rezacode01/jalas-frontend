@@ -9,6 +9,7 @@ import withAuth from './common/withAuth';
 import ErrorPage from './common/ErrorPage'
 import Panel from './Admin/Panel'
 import PollEdit from './poll/PollEdit.js';
+import UserSettings from './user/UserSettings.js';
 
 class App extends Component {
 
@@ -17,6 +18,7 @@ class App extends Component {
         <Router>
           <div>
             <Switch>
+                <Route exact path="/settings" component={UserSettings} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/admin" component={withAuth(Panel)} />
                 <Route exact path="/" component={withAuth(Home)} />

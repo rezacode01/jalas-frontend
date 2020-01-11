@@ -19,11 +19,10 @@ class Header extends Component {
                     <div id="header" className="row border rounded-pill bg-dark text-light">
                         <nav className="col-auto row align-items-center">
                                 {this.Auth.getConfirm().user_name} 
-                            <Link className="btn btn-info pull-right" to='/'>خانه</Link>
+                            <Link className="btn btn-sm btn-success pull-right" to='/'>خانه</Link>
                             
-                            <div id="logout" className="col-2 clickable pull-right" onClick={this.handleLogout}>
-                                <Link to='/login'>خروج</Link>
-                            </div>
+                                <button id="logout" className="col-auto btn btn-sm btn-danger pull-right" onClick={this.handleLogout}>خروج</button>
+                                <Link className="btn btn-sm btn-warning pull-right" to='/settings'>تنظیمات</Link>
                         </nav>
                     </div>
                 </div>

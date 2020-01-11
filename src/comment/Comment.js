@@ -118,32 +118,32 @@ export default class Comment extends Component {
         </a>
         {comment.replyTo &&
         <a href={"#" + comment.replyTo.cid } >
-          <div className="media-body p-2 rounded bg-light border" 
+          <div className="media-body p-2 mb-2 rounded bg-white border" 
             style={{
               'color':'aqua',
               'textDecoration':'none',
-              'backgroundColor':'blue',
+              'backgroundColor':'dark',
             }}
           >
-            <p>{comment.user.fullname}</p>
+            <p className="text-muted">{comment.user.fullname}</p>
             {comment.replyTo.message.length > 50 ? 
             comment.replyTo.message.substring(0, 50) : 
             comment.replyTo.message}
           </div>
         </a>}
          <div className="col-12">{message}</div> 
-          <div className="row">
+          <div className="row col-10">
          {(user.username === visitor || this.props.isCreator) &&
               <div className="float-left">
-                <button className="btn btn-default"
+                <button className="btn btn-sm btn-warning"
                   onClick={this.handleEdit}
                 >ویرایش</button>
-                <button className="btn btn-default"
+                <button className="btn btn-sm btn-danger"
                   onClick={() => this.props.onDelete(comment)}
                 >حذف</button>
               </div>
          }
-                  <button className="btn btn-success float-right"
+                  <button className="btn btn-sm btn-success"
                   onClick={this.handleReply}>
                   پاسخ
                   </button>  

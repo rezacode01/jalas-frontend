@@ -147,7 +147,7 @@ export default class Comment extends Component {
                   onClick={this.handleReply}>
                   پاسخ
                   </button>  
-            </div>}
+            </div>
          {this.state.isEditing &&
          <div>
           <textarea

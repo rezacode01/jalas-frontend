@@ -9,6 +9,11 @@ const base = "http://127.0.0.1:8048/"
 const RequestUtil = createReactClass({
 
   statics: {
+    API: () => { 
+      return axios.create({
+      baseURL: base
+    })},
+
     postJson: function(url, data) {
       let Auth =  new AuthUtil();
         const headers = {

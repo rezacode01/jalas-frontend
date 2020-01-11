@@ -4,7 +4,7 @@ import CommentSection from '../comment/CommentSection'
 import 'react-toastify/dist/ReactToastify.css';
 import DateTimePicker from 'react-datetime-picker';
 
-export default class Vote extends React.Component {
+export default class PollEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,44 +42,12 @@ export default class Vote extends React.Component {
             });
     }
 
-    handleAddSlot = (e) => {
-        e.preventDefault()
-        console.log("here")
-        this.setState({...this.state,
-            addingSlot: true
-        })
-    }
-
-    handleChangeSlot = (from, date) => {
-        const slot = this.state.slot
-        if (from) slot.from = date
-        else slot.to = date
-        this.setState({...this.state,
-            slot: slot
-        })
-    }
-
-    handleSubmitSlot = (e) => {
-        e.preventDefault()
-        const s = this.state.slot;
-        this.setState({pending: true})
-        const path = `meetings/${this.state.poll.id}/slots/`
-        RequestUtil.postJson(path, {
-            from: s.from.getTime()/1000,
-            to: s.to.getTime()/1000
-        }).then(res => {
-            if (res.status === 200) {
-                this.setState({addingSlot: false})
-                this.fetchPoll()
-            }
-        }).catch(err => {
-            this.notifyError(err.response.code)
-            console.log(err.response)
-        })
+    editVote = () => {
+        this.props.history.push(`/polls/${this.state.poll.id}/edit`);
     }
 
     arrangeMeeting = () => {
-        this.props.history.push(`/meetings/${this.state.poll.id}`);
+        this.props.history.push(`/polls/${this.state.poll.id}`);
     }
 
     handleVote = (id, vote, e) => {
@@ -128,29 +96,12 @@ export default class Vote extends React.Component {
                                                     )}
                     </tbody>
                     </table>
-                    {!isOwn ? "" : this.state.addingSlot ? 
-                        <div>
-                            <div>
-                            from
-                            <DateTimePicker
-                                onChange={(date) => this.handleChangeSlot(true, date)}
-                                value={slot.from}
-                                />
-                            to
-                            <DateTimePicker
-                                onChange={(date) => this.handleChangeSlot(false, date)}
-                                value={slot.to}
-                                />
-                            </div>
-                            <button className="btn btn-success btn-sm" 
-                                onClick={(e) => this.handleSubmitSlot(e)}>تایید</button>
-                        </div>
-                    :
+                    {!isOwn ? null :
                         <button 
                             type="button" 
                             className="btn btn-secondary btn-lg btn-block"
-                            onClick={this.handleAddSlot}>
-                            اضافه‌کردن زمان جدید</button>
+                            onClick={this.editVote}>
+                            ویرایش</button>
                     }
                     
                     {isOwn &&  

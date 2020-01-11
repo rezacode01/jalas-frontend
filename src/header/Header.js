@@ -16,11 +16,12 @@ class Header extends Component {
         return (
             <header>
                 <div className="container h-100">
-                    <div id="header" className="row align-items-center justify-content-between">
+                    <div id="header" className="row border rounded-pill bg-dark text-light">
                         <nav className="col-auto row align-items-center">
-                                {this.Auth.getConfirm().user_name} <Link className="btn btn-info" to='/'>خانه</Link>
+                                {this.Auth.getConfirm().user_name} 
+                            <Link className="btn btn-info pull-right" to='/'>خانه</Link>
                             
-                            <div id="logout" className="col-auto clickable" onClick={this.handleLogout}>
+                            <div id="logout" className="col-2 clickable pull-right" onClick={this.handleLogout}>
                                 <Link to='/login'>خروج</Link>
                             </div>
                         </nav>

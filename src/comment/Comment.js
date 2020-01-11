@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import CommentList from "./CommentList";
 import RequestUtil from "../common/Util";
 
 

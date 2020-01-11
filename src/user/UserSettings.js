@@ -5,7 +5,7 @@ export default class UserSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        subs: ""
+        subs: null
     }
   }
 
@@ -22,10 +22,11 @@ export default class UserSettings extends React.Component {
 
   changeOptions = (notif, e) => {
       console.log(notif, e.target.value)
+      console.log(notif, e.target.value == 1)
+      const subs = this.state.subs
+      subs[notif] = e.target.value == 1
       this.setState({
-          subs: {...this.state.subs,
-              [notif]: e.target.value===1 ? true : false
-          }
+          subs
       })
   }
 
@@ -41,10 +42,10 @@ export default class UserSettings extends React.Component {
 
   render() {
     const subs = this.state.subs
-    console.log(this.state.subs)
+    console.log(subs)
     if (!subs) return "صبرکنید"
     return (
-      <div>
+      <div className="text-right">
         <h1>ویرایش اطلاع‌رسانی‌ها</h1>
         <div>
             <NotifList 
@@ -64,10 +65,13 @@ function NotifList(props) {
     const subs = props.subs
     const notifs = Object.keys(subs)
     return (
-    <table className="table table-striped table-dark">
+    <table className="table col-8 table-striped table-dark"
+        style={{'margin': 'auto',
+                'width': '50% !important'}}
+    >
         <tbody>
         <tr>
-            <th>{"اطلاع‌رسانی"}</th><th>{"انتخاب شما"}</th>
+            <th>{"انتخاب شما"}</th><th className="text-right">{"اطلاع‌رسانی"}</th>
         </tr>
         {notifs.map((n) =>
           <NotifOption name={n} option={subs[n]}
@@ -97,16 +101,16 @@ function NotifOption(props) {
     
     return (
     <tr>
-    <td style={{'direction': 'rtl'}}>{name}</td>
         <td>
-            <select className="mdb-select md-form colorful-select dropdown-primary"
+            <select className="selectpicker"
                 onChange={(e) => props.onChange(props.name, e)}
-                selected= {props.option === true ? "1" : "2"}
+                defaultValue={props.option ? "1" : "2"}
             >
                 <option value="1">فعال</option>
                 <option value="2">غیرفعال</option>
             </select>
         </td>
+    <td className="text-right">{name}</td>
     </tr>
     );
 }

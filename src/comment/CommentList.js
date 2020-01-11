@@ -1,6 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
 import Comment from "./Comment";
-import RequestUtil from "../common/Util";
 
 
 export default function CommentList(props) {

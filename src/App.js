@@ -18,7 +18,7 @@ class App extends Component {
         <Router>
           <div>
             <Switch>
-                <Route exact path="/settings" component={UserSettings} />
+                <Route exact path="/settings" component={withAuth(UserSettings)} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/admin" component={withAuth(Panel)} />
                 <Route exact path="/" component={withAuth(Home)} />

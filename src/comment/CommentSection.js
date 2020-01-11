@@ -45,10 +45,6 @@ export default class CommentSection extends Component {
     const path = `meetings/${this.state.poll}/comments/${comment.cid}`
     RequestUtil.delete(path, null).then(res => {
       if (res.status === 200) {
-        let comments = this.state.comments.slice()
-        comments = comments.filter(function( obj ) {
-          return obj.cid !== comment.cid;
-        })
         this.fetchComments()
       }
     }).catch(err => {

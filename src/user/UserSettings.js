@@ -21,10 +21,8 @@ export default class UserSettings extends React.Component {
   }
 
   changeOptions = (notif, e) => {
-      console.log(notif, e.target.value)
-      console.log(notif, e.target.value == 1)
       const subs = this.state.subs
-      subs[notif] = e.target.value == 1
+      subs[notif] = e.target.value === 1
       this.setState({
           subs
       })
@@ -95,14 +93,13 @@ const persian = {
 }
 
 function NotifOption(props) {
-    console.log(props.option)
     let name = props.name
     if (persian[name]) name = persian[name]
     
     return (
     <tr>
         <td>
-            <select className="selectpicker"
+            <select className="mdb-select md-form"
                 onChange={(e) => props.onChange(props.name, e)}
                 defaultValue={props.option ? "1" : "2"}
             >

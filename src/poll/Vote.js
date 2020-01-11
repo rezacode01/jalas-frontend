@@ -2,7 +2,6 @@ import React from 'react';
 import RequestUtil from '../common/Util';
 import CommentSection from '../comment/CommentSection'
 import 'react-toastify/dist/ReactToastify.css';
-import DateTimePicker from 'react-datetime-picker';
 
 export default class PollEdit extends React.Component {
     constructor(props) {
@@ -77,7 +76,6 @@ export default class PollEdit extends React.Component {
         if (!poll) {
             return <div>صبرکنید</div>
         }
-        const slot = this.state.slot
         const isOwn = this.props.confirm.user_name === poll.creator.username
 
         return (

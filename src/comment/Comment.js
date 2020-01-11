@@ -65,7 +65,6 @@ export default class Comment extends Component {
     RequestUtil.postJson(path, data).then(res => {
       if (res.status === 200) {
         let reply = res.data;
-        console.log(reply)
         reply.date = new Date()
         reply.children = []
         this.setState({
@@ -82,7 +81,8 @@ export default class Comment extends Component {
   handleSubmitEdit = () => {
     let comment = this.state.comment
     const data = {
-      "message": this.state.editText
+      "message": this.state.editText,
+      "replyTo": comment.replyTo ? comment.replyTo.cid : null
     };
     const path = `meetings/${this.props.poll}/comments/${comment.cid}`
     RequestUtil.put(path, data).then(res => {
@@ -104,7 +104,6 @@ export default class Comment extends Component {
     const { user, message, date } = this.state.comment;
     const visitor = this.props.user
     let comment = this.state.comment
-    console.log(visitor, user, this.props.isCreator)
     return (
     
       <div className="row media px-3 mb-2">

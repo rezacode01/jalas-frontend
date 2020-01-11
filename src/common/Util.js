@@ -13,7 +13,16 @@ const RequestUtil = createReactClass({
       return axios.create({
       baseURL: base
     })},
-
+    postQueryParams: function(url, params) {
+      let Auth =  new AuthUtil();
+      const headers = {
+        'Content-Type': 'application/json'
+      }
+      if (Auth.loggedIn()) {
+        headers["Authorization"] = "Bearer " +  Auth.getToken();
+      };
+      return axios.post(base + url, null, {headers, params})
+    },
     postJson: function(url, data) {
       let Auth =  new AuthUtil();
         const headers = {

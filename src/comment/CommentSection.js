@@ -56,7 +56,6 @@ export default class CommentSection extends Component {
     if (this.state.loading) return "صبرکنید"
 
     let comments = this.state.comments
-    console.log(comments)
     return (
       <div className="container bg-light shadow">
         <div className="row">

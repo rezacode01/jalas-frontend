@@ -1,17 +1,19 @@
-FROM node:8
+FROM node as react-build
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . ./
+RUN npm run build
 
-#ADD yarn.lock /yarn.lock
-ADD package.json /package.json
+FROM react-build AS dev
+WORKDIR /usr/src/app
+CMD ["npm", "start"]
 
-ENV NODE_PATH=/node_modules
-ENV PATH=$PATH:/node_modules/.bin
-RUN yarn
-
-WORKDIR /app
-ADD . /app
-
+FROM node AS release
+WORKDIR /build
+COPY --from=react-build usr/src/app/build ./build
 EXPOSE 3000
-EXPOSE 35729
+RUN npm install -g serve
+CMD ["serve", "-s", "build", "-l", "3000"]
 
-ENTRYPOINT ["/bin/bash", "/app/run.sh"]
-CMD ["start"]
+FROM release
